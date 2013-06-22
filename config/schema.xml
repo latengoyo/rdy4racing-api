@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="rdy4racing" namespace="\Rdy4Racing-API\Models" defaultIdMethod="native">
+	<table name="game" phpName="Game">
+		<column name="game_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="game_code" phpName="Code" type="varchar" size="8" required="true" />
+		<column name="game_name" phpName="Name" type="varchar" size="32" required="true" />
+		<index>
+			<index-column name="game_code" />
+		</index>
+		<index>
+			<index-column name="game_name" />
+		</index>
+		<unique>
+			<unique-column name="game_code"/>
+		</unique>
+	</table>
+	<table name="gamemod" phpName="GameMod">
+		<column name="gmod_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="gmod_game_id" phpName="GameId" type="integer" required="true" />
+		<column name="gmod_code" phpName="Code" type="varchar" size="16" required="true" />
+		<column name="gmod_name" phpName="Name" type="varchar" size="32" required="true" />
+		<column name="gmod_description" phpName="Description" type="varchar" size="2048" required="true" />
+		<column name="gmod_image_low" phpName="ImageLowRes" type="varchar" size="255" required="true" />
+		<column name="gmod_image_high" phpName="ImageHiRes" type="varchar" size="255" required="true" />
+		<column name="gmod_image_gl" phpName="ImageGameLauncher" type="varchar" size="255" required="true" />
+		<index>
+			<index-column name="gmod_code" />
+		</index>
+		<index>
+			<index-column name="gmod_name" />
+		</index>
+		<unique>
+			<unique-column name="gmod_code"/>
+		</unique>
+		<foreign-key foreignTable="game">
+			<reference local="gmod_game_id" foreign="game_id" phpName="Game"/>
+		</foreign-key>
+	</table>
+	<table name="user" phpName="User">
+		<column name="user_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="user_email" phpName="Email" type="varchar" size="255" required="true" />
+		<column name="user_password" phpName="Password" type="varchar" size="124" required="true" />
+		<column name="user_firstname" phpName="FirstName" type="varchar" size="255" required="false" />
+		<column name="user_lastname" phpName="LastName" type="varchar" size="255" required="false" />
+		<column name="user_dateofbirth" phpName="DateOfBirth" type="date" required="false" />
+		<column name="user_rank" phpName="Rank" type="varchar" size="1" required="true" defaultValue="R" />
+		<column name="user_mmr" phpName="MMR" type="integer" required="true" defaultValue="1000" />
+		<column name="user_rating" phpName="Rating" type="integer" required="true" defaultValue="0" />
+		<column name="user_about" phpName="About" type="longvarchar" required="false"/>
+		<column name="user_avatar" phpName="Avatar" type="varchar" size="255" required="false" />
+		<column name="user_created" phpName="Created" type="timestamp" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+		<column name="user_active" phpName="Active" type="smallint" required="true" defaultValue="1" />
+		<column name="user_godfather" phpName="GodfatherId" type="integer" required="false" />
+		<index>
+			<index-column name="user_email" />
+		</index>
+		<index>
+			<index-column name="user_firstname" />
+		</index>
+		<index>
+			<index-column name="user_lastname" />
+		</index>
+		<unique>
+			<unique-column name="user_email"/>
+		</unique>
+		<foreign-key foreignTable="user">
+			<reference local="user_godfather" foreign="user_id" phpName="Godfather"/>
+		</foreign-key>
+	</table>
+	<table name="user_game" phpName="UserGame">
+		<column name="usgm_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="usgm_user_id" phpName="UserId" type="integer" required="true" />
+		<column name="usgm_game_id" phpName="GameId" type="integer" required="true" />
+		<column name="usgm_driver" phpName="Driver" type="varchar" size="32" required="true" />
+		<index>
+			<index-column name="usgm_driver" />
+		</index>
+		<unique>
+			<unique-column name="usgm_user_id"/>
+			<unique-column name="usgm_game_id"/>
+		</unique>
+		<unique>
+			<unique-column name="usgm_game_id"/>
+			<unique-column name="usgm_driver"/>
+		</unique>
+		<foreign-key foreignTable="user">
+			<reference local="usgm_user_id" foreign="user_id" phpName="User"/>
+		</foreign-key>
+		<foreign-key foreignTable="game">
+			<reference local="usgm_game_id" foreign="game_id" phpName="Game"/>
+		</foreign-key>
+	</table>
+</database>
