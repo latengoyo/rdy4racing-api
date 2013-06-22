@@ -1,6 +1,6 @@
 <?php
 
-namespace \Rdy4Racing-API\Models\om;
+namespace Rdy4Racing\Models\om;
 
 use \BaseObject;
 use \BasePeer;
@@ -11,11 +11,11 @@ use \Persistent;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
-use \Rdy4Racing-API\Models\Game;
-use \Rdy4Racing-API\Models\GameMod;
-use \Rdy4Racing-API\Models\GameModPeer;
-use \Rdy4Racing-API\Models\GameModQuery;
-use \Rdy4Racing-API\Models\GameQuery;
+use Rdy4Racing\Models\Game;
+use Rdy4Racing\Models\GameMod;
+use Rdy4Racing\Models\GameModPeer;
+use Rdy4Racing\Models\GameModQuery;
+use Rdy4Racing\Models\GameQuery;
 
 /**
  * Base class that represents a row from the 'gamemod' table.
@@ -29,7 +29,7 @@ abstract class BaseGameMod extends BaseObject implements Persistent
     /**
      * Peer class name
      */
-    const PEER = '\\Rdy4Racing-API\\Models\\GameModPeer';
+    const PEER = 'Rdy4Racing\\Models\\GameModPeer';
 
     /**
      * The Peer class.

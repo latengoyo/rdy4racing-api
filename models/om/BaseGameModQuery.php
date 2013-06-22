@@ -1,6 +1,6 @@
 <?php
 
-namespace \Rdy4Racing-API\Models\om;
+namespace Rdy4Racing\Models\om;
 
 use \Criteria;
 use \Exception;
@@ -12,10 +12,10 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use \Rdy4Racing-API\Models\Game;
-use \Rdy4Racing-API\Models\GameMod;
-use \Rdy4Racing-API\Models\GameModPeer;
-use \Rdy4Racing-API\Models\GameModQuery;
+use Rdy4Racing\Models\Game;
+use Rdy4Racing\Models\GameMod;
+use Rdy4Racing\Models\GameModPeer;
+use Rdy4Racing\Models\GameModQuery;
 
 /**
  * Base class that represents a query for the 'gamemod' table.
@@ -85,7 +85,7 @@ abstract class BaseGameModQuery extends ModelCriteria
             $dbName = 'rdy4racing';
         }
         if (null === $modelName) {
-            $modelName = '\\Rdy4Racing-API\\Models\\GameMod';
+            $modelName = 'Rdy4Racing\\Models\\GameMod';
         }
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -590,13 +590,13 @@ abstract class BaseGameModQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \\Rdy4Racing-API\Models\GameQuery A secondary query class using the current class as primary query
+     * @return   \Rdy4Racing\Models\GameQuery A secondary query class using the current class as primary query
      */
     public function useGameQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinGame($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Game', '\\Rdy4Racing-API\Models\GameQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'Game', '\Rdy4Racing\Models\GameQuery');
     }
 
     /**

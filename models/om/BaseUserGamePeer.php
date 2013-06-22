@@ -1,6 +1,6 @@
 <?php
 
-namespace \Rdy4Racing-API\Models\om;
+namespace Rdy4Racing\Models\om;
 
 use \BasePeer;
 use \Criteria;
@@ -9,11 +9,11 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
-use \Rdy4Racing-API\Models\GamePeer;
-use \Rdy4Racing-API\Models\UserGame;
-use \Rdy4Racing-API\Models\UserGamePeer;
-use \Rdy4Racing-API\Models\UserPeer;
-use \Rdy4Racing-API\Models\map\UserGameTableMap;
+use Rdy4Racing\Models\GamePeer;
+use Rdy4Racing\Models\UserGame;
+use Rdy4Racing\Models\UserGamePeer;
+use Rdy4Racing\Models\UserPeer;
+use Rdy4Racing\Models\map\UserGameTableMap;
 
 /**
  * Base static class for performing query and update operations on the 'user_game' table.
@@ -32,7 +32,7 @@ abstract class BaseUserGamePeer
     const TABLE_NAME = 'user_game';
 
     /** the related Propel class for this table */
-    const OM_CLASS = '\\Rdy4Racing-API\\Models\\UserGame';
+    const OM_CLASS = 'Rdy4Racing\\Models\\UserGame';
 
     /** the related TableMap class for this table */
     const TM_CLASS = 'UserGameTableMap';

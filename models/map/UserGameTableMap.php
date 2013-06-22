@@ -1,6 +1,6 @@
 <?php
 
-namespace \Rdy4Racing-API\Models\map;
+namespace Rdy4Racing\Models\map;
 
 use \RelationMap;
 use \TableMap;
@@ -38,7 +38,7 @@ class UserGameTableMap extends TableMap
         // attributes
         $this->setName('user_game');
         $this->setPhpName('UserGame');
-        $this->setClassname('\\Rdy4Racing-API\\Models\\UserGame');
+        $this->setClassname('Rdy4Racing\\Models\\UserGame');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
@@ -54,8 +54,8 @@ class UserGameTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('User', '\\Rdy4Racing-API\\Models\\User', RelationMap::MANY_TO_ONE, array('usgm_user_id' => 'user_id', ), null, null);
-        $this->addRelation('Game', '\\Rdy4Racing-API\\Models\\Game', RelationMap::MANY_TO_ONE, array('usgm_game_id' => 'game_id', ), null, null);
+        $this->addRelation('User', 'Rdy4Racing\\Models\\User', RelationMap::MANY_TO_ONE, array('usgm_user_id' => 'user_id', ), null, null);
+        $this->addRelation('Game', 'Rdy4Racing\\Models\\Game', RelationMap::MANY_TO_ONE, array('usgm_game_id' => 'game_id', ), null, null);
     } // buildRelations()
 
 } // UserGameTableMap

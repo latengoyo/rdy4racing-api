@@ -1,6 +1,6 @@
 <?php
 
-namespace \Rdy4Racing-API\Models\om;
+namespace Rdy4Racing\Models\om;
 
 use \BaseObject;
 use \BasePeer;
@@ -15,11 +15,11 @@ use \PropelDateTime;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use \Rdy4Racing-API\Models\User;
-use \Rdy4Racing-API\Models\UserGame;
-use \Rdy4Racing-API\Models\UserGameQuery;
-use \Rdy4Racing-API\Models\UserPeer;
-use \Rdy4Racing-API\Models\UserQuery;
+use Rdy4Racing\Models\User;
+use Rdy4Racing\Models\UserGame;
+use Rdy4Racing\Models\UserGameQuery;
+use Rdy4Racing\Models\UserPeer;
+use Rdy4Racing\Models\UserQuery;
 
 /**
  * Base class that represents a row from the 'user' table.
@@ -33,7 +33,7 @@ abstract class BaseUser extends BaseObject implements Persistent
     /**
      * Peer class name
      */
-    const PEER = '\\Rdy4Racing-API\\Models\\UserPeer';
+    const PEER = 'Rdy4Racing\\Models\\UserPeer';
 
     /**
      * The Peer class.

@@ -1,6 +1,6 @@
 <?php
 
-namespace \Rdy4Racing-API\Models\om;
+namespace Rdy4Racing\Models\om;
 
 use \BasePeer;
 use \Criteria;
@@ -9,9 +9,9 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
-use \Rdy4Racing-API\Models\User;
-use \Rdy4Racing-API\Models\UserPeer;
-use \Rdy4Racing-API\Models\map\UserTableMap;
+use Rdy4Racing\Models\User;
+use Rdy4Racing\Models\UserPeer;
+use Rdy4Racing\Models\map\UserTableMap;
 
 /**
  * Base static class for performing query and update operations on the 'user' table.
@@ -30,7 +30,7 @@ abstract class BaseUserPeer
     const TABLE_NAME = 'user';
 
     /** the related Propel class for this table */
-    const OM_CLASS = '\\Rdy4Racing-API\\Models\\User';
+    const OM_CLASS = 'Rdy4Racing\\Models\\User';
 
     /** the related TableMap class for this table */
     const TM_CLASS = 'UserTableMap';

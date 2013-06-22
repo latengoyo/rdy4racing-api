@@ -1,6 +1,6 @@
 <?php
 
-namespace \Rdy4Racing-API\Models\map;
+namespace Rdy4Racing\Models\map;
 
 use \RelationMap;
 use \TableMap;
@@ -38,7 +38,7 @@ class UserTableMap extends TableMap
         // attributes
         $this->setName('user');
         $this->setPhpName('User');
-        $this->setClassname('\\Rdy4Racing-API\\Models\\User');
+        $this->setClassname('Rdy4Racing\\Models\\User');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
@@ -64,9 +64,9 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('UserRelatedByGodfatherId', '\\Rdy4Racing-API\\Models\\User', RelationMap::MANY_TO_ONE, array('user_godfather' => 'user_id', ), null, null);
-        $this->addRelation('UserRelatedById', '\\Rdy4Racing-API\\Models\\User', RelationMap::ONE_TO_MANY, array('user_id' => 'user_godfather', ), null, null, 'UsersRelatedById');
-        $this->addRelation('UserGame', '\\Rdy4Racing-API\\Models\\UserGame', RelationMap::ONE_TO_MANY, array('user_id' => 'usgm_user_id', ), null, null, 'UserGames');
+        $this->addRelation('UserRelatedByGodfatherId', 'Rdy4Racing\\Models\\User', RelationMap::MANY_TO_ONE, array('user_godfather' => 'user_id', ), null, null);
+        $this->addRelation('UserRelatedById', 'Rdy4Racing\\Models\\User', RelationMap::ONE_TO_MANY, array('user_id' => 'user_godfather', ), null, null, 'UsersRelatedById');
+        $this->addRelation('UserGame', 'Rdy4Racing\\Models\\UserGame', RelationMap::ONE_TO_MANY, array('user_id' => 'usgm_user_id', ), null, null, 'UserGames');
     } // buildRelations()
 
 } // UserTableMap

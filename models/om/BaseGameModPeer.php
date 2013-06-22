@@ -1,6 +1,6 @@
 <?php
 
-namespace \Rdy4Racing-API\Models\om;
+namespace Rdy4Racing\Models\om;
 
 use \BasePeer;
 use \Criteria;
@@ -9,10 +9,10 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
-use \Rdy4Racing-API\Models\GameMod;
-use \Rdy4Racing-API\Models\GameModPeer;
-use \Rdy4Racing-API\Models\GamePeer;
-use \Rdy4Racing-API\Models\map\GameModTableMap;
+use Rdy4Racing\Models\GameMod;
+use Rdy4Racing\Models\GameModPeer;
+use Rdy4Racing\Models\GamePeer;
+use Rdy4Racing\Models\map\GameModTableMap;
 
 /**
  * Base static class for performing query and update operations on the 'gamemod' table.
@@ -31,7 +31,7 @@ abstract class BaseGameModPeer
     const TABLE_NAME = 'gamemod';
 
     /** the related Propel class for this table */
-    const OM_CLASS = '\\Rdy4Racing-API\\Models\\GameMod';
+    const OM_CLASS = 'Rdy4Racing\\Models\\GameMod';
 
     /** the related TableMap class for this table */
     const TM_CLASS = 'GameModTableMap';

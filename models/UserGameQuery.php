@@ -1,8 +1,8 @@
 <?php
 
-namespace \Rdy4Racing-API\Models;
+namespace Rdy4Racing\Models;
 
-use \Rdy4Racing-API\Models\om\BaseUserGameQuery;
+use Rdy4Racing\Models\om\BaseUserGameQuery;
 
 
 /**

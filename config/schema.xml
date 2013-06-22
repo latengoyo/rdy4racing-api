@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database name="rdy4racing" namespace="\Rdy4Racing-API\Models" defaultIdMethod="native">
+<database name="rdy4racing" namespace="Rdy4Racing\Models" defaultIdMethod="native">
 	<table name="game" phpName="Game">
 		<column name="game_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
 		<column name="game_code" phpName="Code" type="varchar" size="8" required="true" />
