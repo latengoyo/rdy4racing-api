@@ -4,14 +4,25 @@
 $conf = array (
   'datasources' => 
   array (
-    'devel' => 
+    'rdy4racing' => 
     array (
       'adapter' => 'mysql',
       'connection' => 
       array (
-        'dsn' => 'mysql:host=localhost;dbname=rdy4racing',
+        'dsn' => 'mysql:host=localhost;dbname=rdy4racing;port=8889',
         'user' => 'root',
         'password' => 'root',
+        'charset' => 
+        array (
+          'value' => 'utf8',
+        ),
+        'options' => 
+        array (
+          'MYSQL_ATTR_INIT_COMMAND' => 
+          array (
+            'value' => 'SET NAMES utf8 COLLATE utf8_unicode_ci',
+          ),
+        ),
       ),
     ),
     'prod' => 
@@ -22,9 +33,20 @@ $conf = array (
         'dsn' => 'mysql:host=localhost;dbname=rdy4racing',
         'user' => 'invalid',
         'password' => 'invalid',
+        'charset' => 
+        array (
+          'value' => 'utf8',
+        ),
+        'options' => 
+        array (
+          'MYSQL_ATTR_INIT_COMMAND' => 
+          array (
+            'value' => 'SET NAMES utf8 COLLATE utf8_unicode_ci',
+          ),
+        ),
       ),
     ),
-    'default' => 'devel',
+    'default' => 'rdy4racing',
   ),
   'generator_version' => '1.7.0-dev',
 );

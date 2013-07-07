@@ -23,9 +23,13 @@ class ConfigurationManager {
 	 * Class constructor
 	 */
 	public function __construct() {
-		$this->initConfigurationVars();
-		$this->initAutoload();
-		$this->initDB();
+		try {
+			$this->initConfigurationVars();
+			$this->initDB();
+			$this->initAutoload();
+		} catch (\Exception $e) {
+			throw $e;
+		}
 	}
 	
 	/**
@@ -47,8 +51,18 @@ class ConfigurationManager {
 	 * Initialize the database connection
 	 */
 	protected function initDB () {
-		require_once $this->get('app.path').'/library/propel/runtime/lib/Propel.php';
-		\Propel::init($this->get('app.path').'/config/rdy4racing-api-conf.php');
+		try {
+			require_once $this->get('app.path').'/library/propel/runtime/lib/Propel.php';
+			if (!\Propel::isInit()) {
+				\Propel::init($this->get('app.path').'/config/rdy4racing-api-conf.php');
+				$propelConfig = \Propel::getConfiguration(\PropelConfiguration::TYPE_OBJECT);
+				$propelConfig->setParameter('datasources.default', 'devel');
+				
+				set_include_path($this->get('app.path').'/models' . PATH_SEPARATOR . get_include_path());
+			}
+		} catch (\Exception $e) {
+			throw $e;
+		}
 	}
 	
 	/**
@@ -58,6 +72,9 @@ class ConfigurationManager {
 	 * @return string
 	 */
 	public function get ($name) {
+		if (!array_key_exists($name, $this->config)) {
+			return false;
+		}
 		return $this->config[$name];
 	}
 	

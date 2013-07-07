@@ -1,4 +1,7 @@
 <?php
+require_once 'PHPUnit/Framework/TestSuite.php';
+require_once 'TestConfigurationManager.php';
+require_once 'TestUserManager.php';
 
 /**
  * Static test suite.
@@ -10,6 +13,8 @@ class allTests extends PHPUnit_Framework_TestSuite {
 	 */
 	public function __construct() {
 		$this->setName ( 'allTests' );
+		$this->addTestSuite ( 'TestConfigurationManager' );
+		$this->addTestSuite ( 'TestUserManager' );
 	}
 	
 	/**

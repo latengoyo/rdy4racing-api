@@ -13,6 +13,10 @@
 		<unique>
 			<unique-column name="game_code"/>
 		</unique>
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB"/>
+			<parameter name="Charset" value="utf8"/>
+		</vendor>
 	</table>
 	<table name="gamemod" phpName="GameMod">
 		<column name="gmod_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
@@ -35,6 +39,10 @@
 		<foreign-key foreignTable="game">
 			<reference local="gmod_game_id" foreign="game_id" phpName="Game"/>
 		</foreign-key>
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB"/>
+			<parameter name="Charset" value="utf8"/>
+		</vendor>
 	</table>
 	<table name="user" phpName="User">
 		<column name="user_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
@@ -49,8 +57,9 @@
 		<column name="user_about" phpName="About" type="longvarchar" required="false"/>
 		<column name="user_avatar" phpName="Avatar" type="varchar" size="255" required="false" />
 		<column name="user_created" phpName="Created" type="timestamp" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
-		<column name="user_active" phpName="Active" type="smallint" required="true" defaultValue="1" />
+		<column name="user_active" phpName="Active" type="smallint" required="true" defaultValue="0" />
 		<column name="user_godfather" phpName="GodfatherId" type="integer" required="false" />
+		<column name="user_confirmation_string" phpName="ConfirmationString" type="varchar" size="255" required="false" />
 		<index>
 			<index-column name="user_email" />
 		</index>
@@ -66,6 +75,14 @@
 		<foreign-key foreignTable="user">
 			<reference local="user_godfather" foreign="user_id" phpName="Godfather"/>
 		</foreign-key>
+		<validator column="user_email">
+			<rule name="match" value="/^([a-zA-Z0-9])+([\.a-zA-Z0-9_-])*@([a-zA-Z0-9])+(\.[a-zA-Z0-9_-]+)+$/" message="Please enter a valid email address." />
+			<rule name="unique" message="Email already exists" />
+		</validator>
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB"/>
+			<parameter name="Charset" value="utf8"/>
+		</vendor>
 	</table>
 	<table name="user_game" phpName="UserGame">
 		<column name="usgm_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
@@ -89,5 +106,9 @@
 		<foreign-key foreignTable="game">
 			<reference local="usgm_game_id" foreign="game_id" phpName="Game"/>
 		</foreign-key>
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB"/>
+			<parameter name="Charset" value="utf8"/>
+		</vendor>
 	</table>
 </database>

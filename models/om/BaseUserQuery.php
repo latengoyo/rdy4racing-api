@@ -36,6 +36,7 @@ use Rdy4Racing\Models\UserQuery;
  * @method UserQuery orderByCreated($order = Criteria::ASC) Order by the user_created column
  * @method UserQuery orderByActive($order = Criteria::ASC) Order by the user_active column
  * @method UserQuery orderByGodfatherId($order = Criteria::ASC) Order by the user_godfather column
+ * @method UserQuery orderByConfirmationString($order = Criteria::ASC) Order by the user_confirmation_string column
  *
  * @method UserQuery groupById() Group by the user_id column
  * @method UserQuery groupByEmail() Group by the user_email column
@@ -51,6 +52,7 @@ use Rdy4Racing\Models\UserQuery;
  * @method UserQuery groupByCreated() Group by the user_created column
  * @method UserQuery groupByActive() Group by the user_active column
  * @method UserQuery groupByGodfatherId() Group by the user_godfather column
+ * @method UserQuery groupByConfirmationString() Group by the user_confirmation_string column
  *
  * @method UserQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method UserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -84,6 +86,7 @@ use Rdy4Racing\Models\UserQuery;
  * @method User findOneByCreated(string $user_created) Return the first User filtered by the user_created column
  * @method User findOneByActive(int $user_active) Return the first User filtered by the user_active column
  * @method User findOneByGodfatherId(int $user_godfather) Return the first User filtered by the user_godfather column
+ * @method User findOneByConfirmationString(string $user_confirmation_string) Return the first User filtered by the user_confirmation_string column
  *
  * @method array findById(int $user_id) Return User objects filtered by the user_id column
  * @method array findByEmail(string $user_email) Return User objects filtered by the user_email column
@@ -99,6 +102,7 @@ use Rdy4Racing\Models\UserQuery;
  * @method array findByCreated(string $user_created) Return User objects filtered by the user_created column
  * @method array findByActive(int $user_active) Return User objects filtered by the user_active column
  * @method array findByGodfatherId(int $user_godfather) Return User objects filtered by the user_godfather column
+ * @method array findByConfirmationString(string $user_confirmation_string) Return User objects filtered by the user_confirmation_string column
  *
  * @package    propel.generator..om
  */
@@ -206,7 +210,7 @@ abstract class BaseUserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `user_id`, `user_email`, `user_password`, `user_firstname`, `user_lastname`, `user_dateofbirth`, `user_rank`, `user_mmr`, `user_rating`, `user_about`, `user_avatar`, `user_created`, `user_active`, `user_godfather` FROM `user` WHERE `user_id` = :p0';
+        $sql = 'SELECT `user_id`, `user_email`, `user_password`, `user_firstname`, `user_lastname`, `user_dateofbirth`, `user_rank`, `user_mmr`, `user_rating`, `user_about`, `user_avatar`, `user_created`, `user_active`, `user_godfather`, `user_confirmation_string` FROM `user` WHERE `user_id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -794,6 +798,35 @@ abstract class BaseUserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserPeer::USER_GODFATHER, $godfatherId, $comparison);
+    }
+
+    /**
+     * Filter the query on the user_confirmation_string column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByConfirmationString('fooValue');   // WHERE user_confirmation_string = 'fooValue'
+     * $query->filterByConfirmationString('%fooValue%'); // WHERE user_confirmation_string LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $confirmationString The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function filterByConfirmationString($confirmationString = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($confirmationString)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $confirmationString)) {
+                $confirmationString = str_replace('*', '%', $confirmationString);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserPeer::USER_CONFIRMATION_STRING, $confirmationString, $comparison);
     }
 
     /**

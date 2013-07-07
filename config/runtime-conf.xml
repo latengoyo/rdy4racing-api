@@ -4,13 +4,17 @@
 		<name>/path/to/propel.log</name> <ident>propel-bookstore</ident> <level>7</level> 
 		</log> -->
 	<propel>
-		<datasources default="devel">
-			<datasource id="devel">
+		<datasources default="rdy4racing">
+			<datasource id="rdy4racing">
 				<adapter>mysql</adapter>
 				<connection>
-					<dsn>mysql:host=localhost;dbname=rdy4racing</dsn>
+					<dsn>mysql:host=localhost;dbname=rdy4racing;port=8889</dsn>
 					<user>root</user>
 					<password>root</password>
+					<setting id="charset">utf8</setting>
+					<options>
+						<option id="MYSQL_ATTR_INIT_COMMAND">SET NAMES utf8 COLLATE utf8_unicode_ci</option>
+					</options>
 				</connection>
 			</datasource>
 			<datasource id="prod">
@@ -19,6 +23,10 @@
 					<dsn>mysql:host=localhost;dbname=rdy4racing</dsn>
 					<user>invalid</user>
 					<password>invalid</password>
+					<setting id="charset">utf8</setting>
+					<options>
+						<option id="MYSQL_ATTR_INIT_COMMAND">SET NAMES utf8 COLLATE utf8_unicode_ci</option>
+					</options>
 				</connection>
 			</datasource>
 		</datasources>

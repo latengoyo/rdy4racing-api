@@ -36,13 +36,13 @@ abstract class BaseUserPeer
     const TM_CLASS = 'UserTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 14;
+    const NUM_COLUMNS = 15;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 14;
+    const NUM_HYDRATE_COLUMNS = 15;
 
     /** the column name for the user_id field */
     const USER_ID = 'user.user_id';
@@ -86,6 +86,9 @@ abstract class BaseUserPeer
     /** the column name for the user_godfather field */
     const USER_GODFATHER = 'user.user_godfather';
 
+    /** the column name for the user_confirmation_string field */
+    const USER_CONFIRMATION_STRING = 'user.user_confirmation_string';
+
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -105,12 +108,12 @@ abstract class BaseUserPeer
      * e.g. UserPeer::$fieldNames[UserPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Email', 'Password', 'FirstName', 'LastName', 'DateOfBirth', 'Rank', 'MMR', 'Rating', 'About', 'Avatar', 'Created', 'Active', 'GodfatherId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'email', 'password', 'firstName', 'lastName', 'dateOfBirth', 'rank', 'mMR', 'rating', 'about', 'avatar', 'created', 'active', 'godfatherId', ),
-        BasePeer::TYPE_COLNAME => array (UserPeer::USER_ID, UserPeer::USER_EMAIL, UserPeer::USER_PASSWORD, UserPeer::USER_FIRSTNAME, UserPeer::USER_LASTNAME, UserPeer::USER_DATEOFBIRTH, UserPeer::USER_RANK, UserPeer::USER_MMR, UserPeer::USER_RATING, UserPeer::USER_ABOUT, UserPeer::USER_AVATAR, UserPeer::USER_CREATED, UserPeer::USER_ACTIVE, UserPeer::USER_GODFATHER, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('USER_ID', 'USER_EMAIL', 'USER_PASSWORD', 'USER_FIRSTNAME', 'USER_LASTNAME', 'USER_DATEOFBIRTH', 'USER_RANK', 'USER_MMR', 'USER_RATING', 'USER_ABOUT', 'USER_AVATAR', 'USER_CREATED', 'USER_ACTIVE', 'USER_GODFATHER', ),
-        BasePeer::TYPE_FIELDNAME => array ('user_id', 'user_email', 'user_password', 'user_firstname', 'user_lastname', 'user_dateofbirth', 'user_rank', 'user_mmr', 'user_rating', 'user_about', 'user_avatar', 'user_created', 'user_active', 'user_godfather', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Email', 'Password', 'FirstName', 'LastName', 'DateOfBirth', 'Rank', 'MMR', 'Rating', 'About', 'Avatar', 'Created', 'Active', 'GodfatherId', 'ConfirmationString', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'email', 'password', 'firstName', 'lastName', 'dateOfBirth', 'rank', 'mMR', 'rating', 'about', 'avatar', 'created', 'active', 'godfatherId', 'confirmationString', ),
+        BasePeer::TYPE_COLNAME => array (UserPeer::USER_ID, UserPeer::USER_EMAIL, UserPeer::USER_PASSWORD, UserPeer::USER_FIRSTNAME, UserPeer::USER_LASTNAME, UserPeer::USER_DATEOFBIRTH, UserPeer::USER_RANK, UserPeer::USER_MMR, UserPeer::USER_RATING, UserPeer::USER_ABOUT, UserPeer::USER_AVATAR, UserPeer::USER_CREATED, UserPeer::USER_ACTIVE, UserPeer::USER_GODFATHER, UserPeer::USER_CONFIRMATION_STRING, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('USER_ID', 'USER_EMAIL', 'USER_PASSWORD', 'USER_FIRSTNAME', 'USER_LASTNAME', 'USER_DATEOFBIRTH', 'USER_RANK', 'USER_MMR', 'USER_RATING', 'USER_ABOUT', 'USER_AVATAR', 'USER_CREATED', 'USER_ACTIVE', 'USER_GODFATHER', 'USER_CONFIRMATION_STRING', ),
+        BasePeer::TYPE_FIELDNAME => array ('user_id', 'user_email', 'user_password', 'user_firstname', 'user_lastname', 'user_dateofbirth', 'user_rank', 'user_mmr', 'user_rating', 'user_about', 'user_avatar', 'user_created', 'user_active', 'user_godfather', 'user_confirmation_string', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -120,12 +123,12 @@ abstract class BaseUserPeer
      * e.g. UserPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Email' => 1, 'Password' => 2, 'FirstName' => 3, 'LastName' => 4, 'DateOfBirth' => 5, 'Rank' => 6, 'MMR' => 7, 'Rating' => 8, 'About' => 9, 'Avatar' => 10, 'Created' => 11, 'Active' => 12, 'GodfatherId' => 13, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'email' => 1, 'password' => 2, 'firstName' => 3, 'lastName' => 4, 'dateOfBirth' => 5, 'rank' => 6, 'mMR' => 7, 'rating' => 8, 'about' => 9, 'avatar' => 10, 'created' => 11, 'active' => 12, 'godfatherId' => 13, ),
-        BasePeer::TYPE_COLNAME => array (UserPeer::USER_ID => 0, UserPeer::USER_EMAIL => 1, UserPeer::USER_PASSWORD => 2, UserPeer::USER_FIRSTNAME => 3, UserPeer::USER_LASTNAME => 4, UserPeer::USER_DATEOFBIRTH => 5, UserPeer::USER_RANK => 6, UserPeer::USER_MMR => 7, UserPeer::USER_RATING => 8, UserPeer::USER_ABOUT => 9, UserPeer::USER_AVATAR => 10, UserPeer::USER_CREATED => 11, UserPeer::USER_ACTIVE => 12, UserPeer::USER_GODFATHER => 13, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('USER_ID' => 0, 'USER_EMAIL' => 1, 'USER_PASSWORD' => 2, 'USER_FIRSTNAME' => 3, 'USER_LASTNAME' => 4, 'USER_DATEOFBIRTH' => 5, 'USER_RANK' => 6, 'USER_MMR' => 7, 'USER_RATING' => 8, 'USER_ABOUT' => 9, 'USER_AVATAR' => 10, 'USER_CREATED' => 11, 'USER_ACTIVE' => 12, 'USER_GODFATHER' => 13, ),
-        BasePeer::TYPE_FIELDNAME => array ('user_id' => 0, 'user_email' => 1, 'user_password' => 2, 'user_firstname' => 3, 'user_lastname' => 4, 'user_dateofbirth' => 5, 'user_rank' => 6, 'user_mmr' => 7, 'user_rating' => 8, 'user_about' => 9, 'user_avatar' => 10, 'user_created' => 11, 'user_active' => 12, 'user_godfather' => 13, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Email' => 1, 'Password' => 2, 'FirstName' => 3, 'LastName' => 4, 'DateOfBirth' => 5, 'Rank' => 6, 'MMR' => 7, 'Rating' => 8, 'About' => 9, 'Avatar' => 10, 'Created' => 11, 'Active' => 12, 'GodfatherId' => 13, 'ConfirmationString' => 14, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'email' => 1, 'password' => 2, 'firstName' => 3, 'lastName' => 4, 'dateOfBirth' => 5, 'rank' => 6, 'mMR' => 7, 'rating' => 8, 'about' => 9, 'avatar' => 10, 'created' => 11, 'active' => 12, 'godfatherId' => 13, 'confirmationString' => 14, ),
+        BasePeer::TYPE_COLNAME => array (UserPeer::USER_ID => 0, UserPeer::USER_EMAIL => 1, UserPeer::USER_PASSWORD => 2, UserPeer::USER_FIRSTNAME => 3, UserPeer::USER_LASTNAME => 4, UserPeer::USER_DATEOFBIRTH => 5, UserPeer::USER_RANK => 6, UserPeer::USER_MMR => 7, UserPeer::USER_RATING => 8, UserPeer::USER_ABOUT => 9, UserPeer::USER_AVATAR => 10, UserPeer::USER_CREATED => 11, UserPeer::USER_ACTIVE => 12, UserPeer::USER_GODFATHER => 13, UserPeer::USER_CONFIRMATION_STRING => 14, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('USER_ID' => 0, 'USER_EMAIL' => 1, 'USER_PASSWORD' => 2, 'USER_FIRSTNAME' => 3, 'USER_LASTNAME' => 4, 'USER_DATEOFBIRTH' => 5, 'USER_RANK' => 6, 'USER_MMR' => 7, 'USER_RATING' => 8, 'USER_ABOUT' => 9, 'USER_AVATAR' => 10, 'USER_CREATED' => 11, 'USER_ACTIVE' => 12, 'USER_GODFATHER' => 13, 'USER_CONFIRMATION_STRING' => 14, ),
+        BasePeer::TYPE_FIELDNAME => array ('user_id' => 0, 'user_email' => 1, 'user_password' => 2, 'user_firstname' => 3, 'user_lastname' => 4, 'user_dateofbirth' => 5, 'user_rank' => 6, 'user_mmr' => 7, 'user_rating' => 8, 'user_about' => 9, 'user_avatar' => 10, 'user_created' => 11, 'user_active' => 12, 'user_godfather' => 13, 'user_confirmation_string' => 14, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, )
     );
 
     /**
@@ -213,6 +216,7 @@ abstract class BaseUserPeer
             $criteria->addSelectColumn(UserPeer::USER_CREATED);
             $criteria->addSelectColumn(UserPeer::USER_ACTIVE);
             $criteria->addSelectColumn(UserPeer::USER_GODFATHER);
+            $criteria->addSelectColumn(UserPeer::USER_CONFIRMATION_STRING);
         } else {
             $criteria->addSelectColumn($alias . '.user_id');
             $criteria->addSelectColumn($alias . '.user_email');
@@ -228,6 +232,7 @@ abstract class BaseUserPeer
             $criteria->addSelectColumn($alias . '.user_created');
             $criteria->addSelectColumn($alias . '.user_active');
             $criteria->addSelectColumn($alias . '.user_godfather');
+            $criteria->addSelectColumn($alias . '.user_confirmation_string');
         }
     }
 
@@ -861,6 +866,9 @@ abstract class BaseUserPeer
                 }
             }
         } else {
+
+        if ($obj->isNew() || $obj->isColumnModified(UserPeer::USER_EMAIL))
+            $columns[UserPeer::USER_EMAIL] = $obj->getEmail();
 
         }
 

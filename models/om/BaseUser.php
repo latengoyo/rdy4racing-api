@@ -127,7 +127,7 @@ abstract class BaseUser extends BaseObject implements Persistent
 
     /**
      * The value for the user_active field.
-     * Note: this column has a database default value of: 1
+     * Note: this column has a database default value of: 0
      * @var        int
      */
     protected $user_active;
@@ -137,6 +137,12 @@ abstract class BaseUser extends BaseObject implements Persistent
      * @var        int
      */
     protected $user_godfather;
+
+    /**
+     * The value for the user_confirmation_string field.
+     * @var        string
+     */
+    protected $user_confirmation_string;
 
     /**
      * @var        User
@@ -198,7 +204,7 @@ abstract class BaseUser extends BaseObject implements Persistent
         $this->user_rank = 'R';
         $this->user_mmr = 1000;
         $this->user_rating = 0;
-        $this->user_active = 1;
+        $this->user_active = 0;
     }
 
     /**
@@ -421,6 +427,17 @@ abstract class BaseUser extends BaseObject implements Persistent
     {
 
         return $this->user_godfather;
+    }
+
+    /**
+     * Get the [user_confirmation_string] column value.
+     *
+     * @return string
+     */
+    public function getConfirmationString()
+    {
+
+        return $this->user_confirmation_string;
     }
 
     /**
@@ -726,6 +743,27 @@ abstract class BaseUser extends BaseObject implements Persistent
     } // setGodfatherId()
 
     /**
+     * Set the value of [user_confirmation_string] column.
+     *
+     * @param  string $v new value
+     * @return User The current object (for fluent API support)
+     */
+    public function setConfirmationString($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->user_confirmation_string !== $v) {
+            $this->user_confirmation_string = $v;
+            $this->modifiedColumns[] = UserPeer::USER_CONFIRMATION_STRING;
+        }
+
+
+        return $this;
+    } // setConfirmationString()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -747,7 +785,7 @@ abstract class BaseUser extends BaseObject implements Persistent
                 return false;
             }
 
-            if ($this->user_active !== 1) {
+            if ($this->user_active !== 0) {
                 return false;
             }
 
@@ -787,6 +825,7 @@ abstract class BaseUser extends BaseObject implements Persistent
             $this->user_created = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
             $this->user_active = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
             $this->user_godfather = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
+            $this->user_confirmation_string = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -796,7 +835,7 @@ abstract class BaseUser extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 14; // 14 = UserPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 15; // 15 = UserPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating User object", $e);
@@ -1105,6 +1144,9 @@ abstract class BaseUser extends BaseObject implements Persistent
         if ($this->isColumnModified(UserPeer::USER_GODFATHER)) {
             $modifiedColumns[':p' . $index++]  = '`user_godfather`';
         }
+        if ($this->isColumnModified(UserPeer::USER_CONFIRMATION_STRING)) {
+            $modifiedColumns[':p' . $index++]  = '`user_confirmation_string`';
+        }
 
         $sql = sprintf(
             'INSERT INTO `user` (%s) VALUES (%s)',
@@ -1157,6 +1199,9 @@ abstract class BaseUser extends BaseObject implements Persistent
                         break;
                     case '`user_godfather`':
                         $stmt->bindValue($identifier, $this->user_godfather, PDO::PARAM_INT);
+                        break;
+                    case '`user_confirmation_string`':
+                        $stmt->bindValue($identifier, $this->user_confirmation_string, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1362,6 +1407,9 @@ abstract class BaseUser extends BaseObject implements Persistent
             case 13:
                 return $this->getGodfatherId();
                 break;
+            case 14:
+                return $this->getConfirmationString();
+                break;
             default:
                 return null;
                 break;
@@ -1405,6 +1453,7 @@ abstract class BaseUser extends BaseObject implements Persistent
             $keys[11] => $this->getCreated(),
             $keys[12] => $this->getActive(),
             $keys[13] => $this->getGodfatherId(),
+            $keys[14] => $this->getConfirmationString(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach($virtualColumns as $key => $virtualColumn)
@@ -1498,6 +1547,9 @@ abstract class BaseUser extends BaseObject implements Persistent
             case 13:
                 $this->setGodfatherId($value);
                 break;
+            case 14:
+                $this->setConfirmationString($value);
+                break;
         } // switch()
     }
 
@@ -1536,6 +1588,7 @@ abstract class BaseUser extends BaseObject implements Persistent
         if (array_key_exists($keys[11], $arr)) $this->setCreated($arr[$keys[11]]);
         if (array_key_exists($keys[12], $arr)) $this->setActive($arr[$keys[12]]);
         if (array_key_exists($keys[13], $arr)) $this->setGodfatherId($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setConfirmationString($arr[$keys[14]]);
     }
 
     /**
@@ -1561,6 +1614,7 @@ abstract class BaseUser extends BaseObject implements Persistent
         if ($this->isColumnModified(UserPeer::USER_CREATED)) $criteria->add(UserPeer::USER_CREATED, $this->user_created);
         if ($this->isColumnModified(UserPeer::USER_ACTIVE)) $criteria->add(UserPeer::USER_ACTIVE, $this->user_active);
         if ($this->isColumnModified(UserPeer::USER_GODFATHER)) $criteria->add(UserPeer::USER_GODFATHER, $this->user_godfather);
+        if ($this->isColumnModified(UserPeer::USER_CONFIRMATION_STRING)) $criteria->add(UserPeer::USER_CONFIRMATION_STRING, $this->user_confirmation_string);
 
         return $criteria;
     }
@@ -1637,6 +1691,7 @@ abstract class BaseUser extends BaseObject implements Persistent
         $copyObj->setCreated($this->getCreated());
         $copyObj->setActive($this->getActive());
         $copyObj->setGodfatherId($this->getGodfatherId());
+        $copyObj->setConfirmationString($this->getConfirmationString());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -2262,6 +2317,7 @@ abstract class BaseUser extends BaseObject implements Persistent
         $this->user_created = null;
         $this->user_active = null;
         $this->user_godfather = null;
+        $this->user_confirmation_string = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

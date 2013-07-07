@@ -18,7 +18,7 @@ CREATE TABLE `game`
     UNIQUE INDEX `game_U_1` (`game_code`),
     INDEX `game_I_1` (`game_code`),
     INDEX `game_I_2` (`game_name`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB CHARACTER SET='utf8';
 
 -- ---------------------------------------------------------------------
 -- gamemod
@@ -44,7 +44,7 @@ CREATE TABLE `gamemod`
     CONSTRAINT `gamemod_FK_1`
         FOREIGN KEY (`gmod_game_id`)
         REFERENCES `game` (`game_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB CHARACTER SET='utf8';
 
 -- ---------------------------------------------------------------------
 -- user
@@ -66,8 +66,9 @@ CREATE TABLE `user`
     `user_about` TEXT,
     `user_avatar` VARCHAR(255),
     `user_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `user_active` SMALLINT DEFAULT 1 NOT NULL,
+    `user_active` SMALLINT DEFAULT 0 NOT NULL,
     `user_godfather` INTEGER,
+    `user_confirmation_string` VARCHAR(255),
     PRIMARY KEY (`user_id`),
     UNIQUE INDEX `user_U_1` (`user_email`),
     INDEX `user_I_1` (`user_email`),
@@ -77,7 +78,7 @@ CREATE TABLE `user`
     CONSTRAINT `user_FK_1`
         FOREIGN KEY (`user_godfather`)
         REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB CHARACTER SET='utf8';
 
 -- ---------------------------------------------------------------------
 -- user_game
@@ -101,7 +102,7 @@ CREATE TABLE `user_game`
     CONSTRAINT `user_game_FK_2`
         FOREIGN KEY (`usgm_game_id`)
         REFERENCES `game` (`game_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB CHARACTER SET='utf8';
 
 # This restores the fkey checks, after having unset them earlier
 SET FOREIGN_KEY_CHECKS = 1;

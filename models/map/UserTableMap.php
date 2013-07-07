@@ -54,9 +54,12 @@ class UserTableMap extends TableMap
         $this->addColumn('user_about', 'About', 'LONGVARCHAR', false, null, null);
         $this->addColumn('user_avatar', 'Avatar', 'VARCHAR', false, 255, null);
         $this->addColumn('user_created', 'Created', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
-        $this->addColumn('user_active', 'Active', 'SMALLINT', true, null, 1);
+        $this->addColumn('user_active', 'Active', 'SMALLINT', true, null, 0);
         $this->addForeignKey('user_godfather', 'GodfatherId', 'INTEGER', 'user', 'user_id', false, null, null);
+        $this->addColumn('user_confirmation_string', 'ConfirmationString', 'VARCHAR', false, 255, null);
         // validators
+        $this->addValidator('user_email', 'match', 'propel.validator.MatchValidator', '/^([a-zA-Z0-9])+([\.a-zA-Z0-9_-])*@([a-zA-Z0-9])+(\.[a-zA-Z0-9_-]+)+$/', 'Please enter a valid email address.');
+        $this->addValidator('user_email', 'unique', 'propel.validator.UniqueValidator', '', 'Email already exists');
     } // initialize()
 
     /**
