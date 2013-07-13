@@ -70,6 +70,9 @@ class UserManager {
 		if (!$user) {
 			throw new UserLoginException('User with email '.$email.' does not exist');
 		}
+		if ($user->getActive()==0) {
+			throw new UserLoginException('User with email '.$email.' is not active');
+		}
 		if (crypt($password,$user->getPassword())!=$user->getPassword()) {
 			throw new UserLoginException('Password is invalid');
 		}

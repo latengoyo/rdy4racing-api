@@ -102,6 +102,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	
 	public function testUserLoginRetunsUserInstance () {
 		$user=$this->getUser();
+		$user->setActive(1);
 		$userPasswordBefore=$user->getPassword();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
@@ -129,6 +130,19 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$this->data[]=$user;
 		$userManager->login($user->getEmail(),'invalid');
 	}
+	
+	/**
+	 * @expectedException Rdy4Racing\Modules\User\UserLoginException
+	 */
+	public function testUserLoginWithoutActiveFlag () {
+		$user=$this->getUser();
+		$userPasswordBefore=$user->getPassword();
+		$userManager=new UserManager();
+		$userManager->addUser($user);
+		$this->data[]=$user;
+		$userLogin=$userManager->login($user->getEmail(),$userPasswordBefore);
+	}
+	
 	
 	public function testUserEmailConfirmationReturnsUserInstance () {
 		$user=$this->getUser();
