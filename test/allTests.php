@@ -2,6 +2,7 @@
 require_once 'PHPUnit/Framework/TestSuite.php';
 require_once 'TestConfigurationManager.php';
 require_once 'TestUserManager.php';
+require_once 'TestSoap.php';
 
 /**
  * Static test suite.
@@ -15,6 +16,7 @@ class allTests extends PHPUnit_Framework_TestSuite {
 		$this->setName ( 'allTests' );
 		$this->addTestSuite ( 'TestConfigurationManager' );
 		$this->addTestSuite ( 'TestUserManager' );
+		$this->addTestSuite ( 'TestSoap' );
 	}
 	
 	/**

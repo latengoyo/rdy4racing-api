@@ -15,18 +15,9 @@ if (ENVIRONMENT!='prod') {
 }
 
 try {
-	// Initialize Zend autoloader
-	$loader = new Zend\Loader\StandardAutoloader(array(
-		'autoregister_zf' => true,
-		'fallback_autoloader' => true,
-	));
-	// Register with spl_autoload:
-	$loader->register();
-	
 	// Starts Webservice and configuration Manager
 	$bootstrap = new Bootstrap();
 	$bootstrap->handle();
-	
 } catch (\Exception $e) {
 	echo $e->getMessage();
 }

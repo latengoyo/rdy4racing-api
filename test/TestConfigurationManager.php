@@ -25,13 +25,6 @@ class TestConfigurationManager extends PHPUnit_Framework_TestCase {
 		parent::tearDown ();
 	}
 	
-	/**
-	 * Constructs the test case.
-	 */
-	public function __construct() {
-	}
-	
-	
 	public function testGetConfigurationValue () {
 		$config=new ConfigurationManager();
 		$configValue=$config->get('app.path');

@@ -44,6 +44,17 @@ class ConfigurationManager {
 	 * Initialize the autoloading method
 	 */
 	protected function initAutoload () {
+
+		require_once $this->get('app.path').'/library/Zend/Loader/StandardAutoloader.php';
+		
+		// Initialize Zend autoloader
+		$loader = new \Zend\Loader\StandardAutoloader(array(
+				'autoregister_zf' => true,
+				'fallback_autoloader' => true,
+		));
+		// Register with spl_autoload:
+		$loader->register();
+		
 		spl_autoload_register(array($this,'autoload'));
 	}
 	

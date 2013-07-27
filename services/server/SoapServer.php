@@ -12,6 +12,7 @@ use Rdy4Racing\Services\ServiceManager;
 
 class SoapServer implements IServer {
 
+	protected $config;
 	protected $module;
 	protected $type;
 	protected $client;
@@ -30,13 +31,13 @@ class SoapServer implements IServer {
 		if (isset($_GET['wsdl'])) {
 			$this->server = new \Zend\Soap\AutoDiscover();
 			$this->server->setClass($className)
-			             ->setUri('http://soap.' . $this->module . '.rdy4racing.com')
-			             ->setBindingStyle(array('style' => 'document'))
-			             ->setOperationBodyStyle(array('use' => 'literal', 'namespace'=>'http://soap.' . $this->module . '.rdy4racing.com'))
+			             ->setUri($this->config->get('services.url').'/'.$this->module)
+			             //->setBindingStyle(array('style' => 'document'))
+			             //->setOperationBodyStyle(array('use' => 'literal', 'namespace'=>$this->config->get('services.url').'/'.$this->module))
 			             ->setServiceName($this->module);
 			$wsdl=$this->server->generate();
 		} else {
-			$wsdl = "http://" . $this->config->get('app.host');
+			$wsdl = $this->config->get('services.url');
 			$wsdl .= "/" . $this->module . "?wsdl";
 			$this->server = new \Zend\Soap\Server($wsdl);
 			$this->server->setObject($this->serviceManager->getObject());
