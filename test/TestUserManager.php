@@ -5,6 +5,7 @@ require_once '../modules/ConfigurationManager.php';
 use Rdy4Racing\Modules\ConfigurationManager;
 use Rdy4Racing\Modules\User\UserManager;
 use Rdy4Racing\Models\User;
+use Rdy4Racing\Models\UserQuery;
 
 /**
  * test case.
@@ -18,6 +19,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	 * Prepares the environment before running a test.
 	 */
 	protected function setUp() {
+		UserQuery::create()->findByEmail('test@test.com')->delete();
 		parent::setUp ();
 	}
 	

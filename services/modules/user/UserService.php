@@ -1,7 +1,7 @@
 <?php 
 
-use Rdy4Racing\Models\User;
 use Rdy4Racing\Modules\ConfigurationManager;
+use Rdy4Racing\Services\Objects\User;
 
 class UserService {
 	
@@ -19,7 +19,7 @@ class UserService {
 	 * 
 	 * @param string $email
 	 * @param string $password
-	 * @return Rdy4Racing\Models\User
+	 * @return Rdy4Racing\Services\Objects\User
 	 */
 	public function login ($email,$password) {
 		return true;
@@ -28,8 +28,8 @@ class UserService {
 	/**
 	 * Creates a new user
 	 * 
-	 * @param Rdy4Racing\Models\User $user
-	 * @return Rdy4Racing\Models\User
+	 * @param Rdy4Racing\Services\Objects\User $user
+	 * @return Rdy4Racing\Services\Objects\User
 	 */
 	public function addUser (User $user) {
 		return $user;
