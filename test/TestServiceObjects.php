@@ -37,7 +37,6 @@ class TestServiceObjects extends PHPUnit_Framework_TestCase {
 		parent::tearDown ();
 	}
 	
-	
 	public function testExportWithoutId () {
 		$userServiceObject=new \Rdy4Racing\Services\Objects\User();
 		$userServiceObject->email='test@test.com';
@@ -63,7 +62,6 @@ class TestServiceObjects extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($user,$userObject);
 		
 	}
-	
 	
 	public function testExportWithIdAndModifiedData () {
 		$user=$this->getUser();
@@ -92,10 +90,7 @@ class TestServiceObjects extends PHPUnit_Framework_TestCase {
 		$userObject=$userServiceObject->export();
 	
 		$this->assertNotEquals($userObject->getRank(),$userServiceObject->rank);
-	
 	}
-	
-	
 	
 	public function testImport () {
 		$user=$this->getUser();
@@ -111,7 +106,6 @@ class TestServiceObjects extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($user->getEmail(), $userServiceObject->email, 'Test property email');
 		$this->assertEquals($user->getPassword(), $userServiceObject->password, 'Test property password');
 	}
-	
 	
 	protected function getUser() {
 		$user=new User();

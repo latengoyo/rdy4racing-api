@@ -5,6 +5,9 @@ namespace Rdy4Racing\Modules\User;
 use Rdy4Racing\Models\User;
 use Rdy4Racing\Models\UserQuery;
 use Rdy4Racing\Helpers\UUIDHelper;
+use Rdy4Racing\Models\UserGame;
+use Rdy4Racing\Models\UserGameQuery;
+use Rdy4Racing\Modules\Game\GameManager;
 
 /**
  * User Manager
@@ -92,6 +95,39 @@ class UserManager {
 			$user->setActive(1)->save();
 		}
 		return $user;
+	}
+	
+	/**
+	 * Registers a game for a user
+	 * 
+	 * @param int $userId
+	 * @param int $gameId
+	 * @param string $driver
+	 */
+	public function registerGame ($userId,$gameId,$driver) {
+		$gameManager=new GameManager();
+		if ($gameManager->driverExists($gameId, $driver)) {
+			throw new UserManagerException('Driver '.$driver.' already exists');
+		}
+		
+		if (!$this->userGameExists($userId, $gameId)) {
+			$userGame=new UserGame();
+			$userGame->setUserId($userId);
+			$userGame->setGameId($gameId);
+			$userGame->setDriver($driver);
+			$userGame->save();
+		}
+	}
+	
+	/**
+	 * Checks if a user has registered a game
+	 * 
+	 * @param int $userId
+	 * @param int $gameId
+	 * @return boolean
+	 */
+	public function userGameExists ($userId,$gameId) {
+		return UserGameQuery::create()->filterByUserId($userId)->filterByGameId($gameId)->count();
 	}
 	
 }

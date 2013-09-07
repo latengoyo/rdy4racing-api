@@ -1,6 +1,7 @@
 <?php 
 
 use Rdy4Racing\Modules\ConfigurationManager;
+use Rdy4Racing\Modules\User\UserManager;
 use Rdy4Racing\Services\Objects\User;
 
 class UserService {
@@ -10,8 +11,40 @@ class UserService {
 	 */
 	protected $config;
 	
+	/**
+	 * @var UserManager
+	 */
+	protected $manager;
+	
+	
 	public function __construct(ConfigurationManager $config) {
 		$this->config=$config;
+		$this->manager=new UserManager();
+	}
+	
+	/**
+	 * Checks if an email is already used
+	 * 
+	 * @param string $email
+	 * @return boolean
+	 */
+	public function emailExists ($email) {
+		try {
+			return $this->manager->emailExists($email);
+		} catch (\Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function confirmEmail ($email, $confirmationString) {
+		try {
+			$userModel=$this->manager->confirmEmail($email, $confirmationString);
+			$user=new User();
+			$user->import($userModel);
+			return $user;
+		} catch (\Exception $e) {
+			throw $e;
+		}
 	}
 	
 	/**
@@ -22,7 +55,14 @@ class UserService {
 	 * @return Rdy4Racing\Services\Objects\User
 	 */
 	public function login ($email,$password) {
-		return true;
+		try {
+			$userModel=$this->manager->login($email, $password);
+			$user=new User();
+			$user->import($userModel);
+			return user;
+		} catch (\Exception $e) {
+			throw $e;
+		}
 	}
 	
 	/**
@@ -32,6 +72,32 @@ class UserService {
 	 * @return Rdy4Racing\Services\Objects\User
 	 */
 	public function addUser (User $user) {
-		return $user;
+		try {
+			$userModel=$user->export();
+			$this->manager->addUser($userModel);
+			$user->import($userModel);
+			return $user;
+		} catch (\Exception $e) {
+			throw $e;
+		}
 	}
+	
+	/**
+	 * Registers a game for a user
+	 * 
+	 * @param int $userId
+	 * @param int $gameId
+	 * @param string $driver
+	 * @return boolean
+	 * @throws Exception
+	 */
+	public function registerGame ($userId,$gameId,$driver) {
+		try {
+			$this->manager->registerGame($userId, $gameId, $driver);
+			return true;
+		} catch (\Exception $e) {
+			throw $e;
+		}
+	}
+	
 }

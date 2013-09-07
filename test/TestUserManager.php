@@ -6,6 +6,10 @@ use Rdy4Racing\Modules\ConfigurationManager;
 use Rdy4Racing\Modules\User\UserManager;
 use Rdy4Racing\Models\User;
 use Rdy4Racing\Models\UserQuery;
+use Rdy4Racing\Models\Game;
+use Rdy4Racing\Models\GameQuery;
+use Rdy4Racing\Models\UserGame;
+use Rdy4Racing\Models\UserGameQuery;
 
 /**
  * test case.
@@ -19,7 +23,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	 * Prepares the environment before running a test.
 	 */
 	protected function setUp() {
-		UserQuery::create()->findByEmail('test@test.com')->delete();
+		$this->removeData();
 		parent::setUp ();
 	}
 	
@@ -27,10 +31,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	 * Cleans up the environment after running a test.
 	 */
 	protected function tearDown() {
-		// delete all data
-		foreach ($this->data as $data) {
-			$data->delete();
-		}
+		$this->removeData();
 		parent::tearDown ();
 	}
 	
@@ -45,7 +46,6 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$user=$this->getUser();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$this->assertNotEmpty($user->getId());
 	}
 	
@@ -59,7 +59,6 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$user=$this->getUser();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$this->assertTrue($userManager->emailExists($user->getEmail()));
 	}
 	
@@ -70,7 +69,6 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$user=$this->getUser();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$userManager->addUser($user);
 	}
 	
@@ -89,7 +87,6 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$userPasswordBefore=$user->getPassword();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$this->assertNotEquals($userPasswordBefore, $user->getPassword(), 'Checking password is different');
 		$this->assertEquals($user->getPassword(),crypt($userPasswordBefore,$user->getPassword()),'Checking password encryption');
 	}
@@ -98,7 +95,6 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$user=$this->getUser();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$this->assertNotEmpty($user->getConfirmationString());
 	}
 	
@@ -108,7 +104,6 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$userPasswordBefore=$user->getPassword();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$userLogin=$userManager->login($user->getEmail(),$userPasswordBefore);
 		$this->assertInstanceOf('Rdy4Racing\\Models\\User', $userLogin);
 		$this->assertEquals($user->getId(), $userLogin->getId());
@@ -129,7 +124,6 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$user=$this->getUser();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$userManager->login($user->getEmail(),'invalid');
 	}
 	
@@ -141,7 +135,6 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$userPasswordBefore=$user->getPassword();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$userLogin=$userManager->login($user->getEmail(),$userPasswordBefore);
 	}
 	
@@ -150,7 +143,6 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$user=$this->getUser();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$userConfirmed=$userManager->confirmEmail($user->getEmail(), $user->getConfirmationString());
 		$this->assertInstanceOf('Rdy4Racing\\Models\\User', $userConfirmed);
 	}
@@ -159,7 +151,6 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$user=$this->getUser();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$userConfirmed=$userManager->confirmEmail($user->getEmail(), $user->getConfirmationString());
 		$this->assertEquals(1, $userConfirmed->getActive());
 	}
@@ -169,11 +160,57 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$user=$this->getUser();
 		$userManager=new UserManager();
 		$userManager->addUser($user);
-		$this->data[]=$user;
 		$userConfirmed=$userManager->confirmEmail($user->getEmail(),'invalid');
 		$this->assertEquals(0, $userConfirmed->getActive());
 	}
 	
+	public function testRegisterGame () {
+		$user=$this->getUser();
+		$userManager=new UserManager();
+		$userManager->addUser($user);
+		$game=$this->getGame();
+		$game->save();
+		$userManager->registerGame($user->getId(), $game->getId(),__CLASS__);
+		
+		$userGames=UserGameQuery::create()->filterByUser($user)->filterByGame($game);
+		$this->assertEquals(1, $userGames->count());
+		
+		$userGame=$userGames->findOne();
+		$this->assertEquals(__CLASS__, $userGame->getDriver());
+	}
+	
+	public function testRegisterGameWithExistingDriver () {
+		$user=$this->getUser();
+		$userManager=new UserManager();
+		$userManager->addUser($user);
+		$game=$this->getGame();
+		$game->save();
+		$userManager->registerGame($user->getId(), $game->getId(),__CLASS__);
+		
+		$user2=$this->getUser();
+		$user2->setEmail('test2@test.com');
+		$user2->save();
+		try {
+			$userManager->registerGame($user2->getId(), $game->getId(),__CLASS__);
+		} catch (\Exception $e) {
+			$this->assertInstanceOf('\\Rdy4Racing\\Modules\\User\\UserManagerException', $e);
+			return ;
+		}
+		$this->fail('An expected exception has not been raised');
+	}
+	
+	public function testRegisterGameCannotBeDoneTwice () {
+		$user=$this->getUser();
+		$userManager=new UserManager();
+		$userManager->addUser($user);
+		$game=$this->getGame();
+		$game->save();
+		$userManager->registerGame($user->getId(), $game->getId(),__CLASS__);
+		$userManager->registerGame($user->getId(), $game->getId(),__CLASS__.'_NEW');
+	
+		$userGames=UserGameQuery::create()->filterByUser($user)->filterByGame($game)->count();
+		$this->assertEquals(1, $userGames);
+	}
 	
 	// testUserDriverExists
 	
@@ -184,6 +221,21 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$user->setFirstName('User');
 		$user->setLastName('Test');
 		return $user;
+	}
+	
+	protected function getGame() {
+		$game=new Game();
+		$game->setName(__CLASS__);
+		$game->setCode('TEST');
+		return $game;
+	}
+	
+	protected function removeData () {
+		$users=UserQuery::create()->findByEmail('%@test.com');
+		$games=GameQuery::create()->findByName(__CLASS__.'%');
+		$userGameQuery=UserGameQuery::create()->filterByUser($users)->filterByGame($games)->delete();
+		$games->delete();
+		$users->delete();
 	}
 	
 }
