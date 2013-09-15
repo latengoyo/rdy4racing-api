@@ -28,6 +28,15 @@
 # Volcado de tabla game
 # ------------------------------------------------------------
 
+LOCK TABLES `game` WRITE;
+/*!40000 ALTER TABLE `game` DISABLE KEYS */;
+
+INSERT INTO `game` (`game_id`, `game_code`, `game_name`)
+VALUES
+	(1,'RFACTOR2','Rfactor2');
+
+/*!40000 ALTER TABLE `game` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Volcado de tabla gamemod
