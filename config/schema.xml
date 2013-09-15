@@ -8,10 +8,16 @@
 		<column name="driver_rating_start" phpName="RatingStart" type="integer" required="true" />
 		<column name="driver_mmr_end" phpName="MMREnd" type="integer" required="false" />
 		<column name="driver_rating_end" phpName="RatingEnd" type="integer" required="false" />
+		<index>
+			<index-column name="driver_session_id" />
+		</index>
+		<index>
+			<index-column name="driver_user_id" />
+		</index>
 		<foreign-key foreignTable="session">
 			<reference local="driver_session_id" foreign="session_id" phpName="Session"/>
 		</foreign-key>
-				<foreign-key foreignTable="user">
+		<foreign-key foreignTable="user">
 			<reference local="driver_user_id" foreign="user_id" phpName="User"/>
 		</foreign-key>
 		<vendor type="mysql">

@@ -19,7 +19,8 @@ CREATE TABLE `driver`
     `driver_mmr_end` INTEGER,
     `driver_rating_end` INTEGER,
     PRIMARY KEY (`driver_session_id`,`driver_user_id`),
-    INDEX `driver_FI_2` (`driver_user_id`),
+    INDEX `driver_I_1` (`driver_session_id`),
+    INDEX `driver_I_2` (`driver_user_id`),
     CONSTRAINT `driver_FK_1`
         FOREIGN KEY (`driver_session_id`)
         REFERENCES `session` (`session_id`),
