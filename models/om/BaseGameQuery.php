@@ -16,6 +16,7 @@ use Rdy4Racing\Models\Game;
 use Rdy4Racing\Models\GameMod;
 use Rdy4Racing\Models\GamePeer;
 use Rdy4Racing\Models\GameQuery;
+use Rdy4Racing\Models\Session;
 use Rdy4Racing\Models\UserGame;
 
 /**
@@ -38,6 +39,10 @@ use Rdy4Racing\Models\UserGame;
  * @method GameQuery leftJoinGameMod($relationAlias = null) Adds a LEFT JOIN clause to the query using the GameMod relation
  * @method GameQuery rightJoinGameMod($relationAlias = null) Adds a RIGHT JOIN clause to the query using the GameMod relation
  * @method GameQuery innerJoinGameMod($relationAlias = null) Adds a INNER JOIN clause to the query using the GameMod relation
+ *
+ * @method GameQuery leftJoinSession($relationAlias = null) Adds a LEFT JOIN clause to the query using the Session relation
+ * @method GameQuery rightJoinSession($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Session relation
+ * @method GameQuery innerJoinSession($relationAlias = null) Adds a INNER JOIN clause to the query using the Session relation
  *
  * @method GameQuery leftJoinUserGame($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserGame relation
  * @method GameQuery rightJoinUserGame($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserGame relation
@@ -420,6 +425,80 @@ abstract class BaseGameQuery extends ModelCriteria
         return $this
             ->joinGameMod($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'GameMod', '\Rdy4Racing\Models\GameModQuery');
+    }
+
+    /**
+     * Filter the query by a related Session object
+     *
+     * @param   Session|PropelObjectCollection $session  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 GameQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterBySession($session, $comparison = null)
+    {
+        if ($session instanceof Session) {
+            return $this
+                ->addUsingAlias(GamePeer::GAME_ID, $session->getGameId(), $comparison);
+        } elseif ($session instanceof PropelObjectCollection) {
+            return $this
+                ->useSessionQuery()
+                ->filterByPrimaryKeys($session->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySession() only accepts arguments of type Session or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Session relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return GameQuery The current query, for fluid interface
+     */
+    public function joinSession($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Session');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Session');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Session relation Session object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Rdy4Racing\Models\SessionQuery A secondary query class using the current class as primary query
+     */
+    public function useSessionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinSession($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Session', '\Rdy4Racing\Models\SessionQuery');
     }
 
     /**

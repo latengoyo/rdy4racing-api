@@ -15,6 +15,8 @@ use \PropelDateTime;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use Rdy4Racing\Models\Driver;
+use Rdy4Racing\Models\DriverQuery;
 use Rdy4Racing\Models\User;
 use Rdy4Racing\Models\UserGame;
 use Rdy4Racing\Models\UserGameQuery;
@@ -150,6 +152,12 @@ abstract class BaseUser extends BaseObject implements Persistent
     protected $aUserRelatedByGodfatherId;
 
     /**
+     * @var        PropelObjectCollection|Driver[] Collection to store aggregation of Driver objects.
+     */
+    protected $collDrivers;
+    protected $collDriversPartial;
+
+    /**
      * @var        PropelObjectCollection|User[] Collection to store aggregation of User objects.
      */
     protected $collUsersRelatedById;
@@ -180,6 +188,12 @@ abstract class BaseUser extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $driversScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -901,6 +915,8 @@ abstract class BaseUser extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aUserRelatedByGodfatherId = null;
+            $this->collDrivers = null;
+
             $this->collUsersRelatedById = null;
 
             $this->collUserGames = null;
@@ -1039,6 +1055,23 @@ abstract class BaseUser extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->driversScheduledForDeletion !== null) {
+                if (!$this->driversScheduledForDeletion->isEmpty()) {
+                    DriverQuery::create()
+                        ->filterByPrimaryKeys($this->driversScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->driversScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collDrivers !== null) {
+                foreach ($this->collDrivers as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->usersRelatedByIdScheduledForDeletion !== null) {
@@ -1314,6 +1347,14 @@ abstract class BaseUser extends BaseObject implements Persistent
             }
 
 
+                if ($this->collDrivers !== null) {
+                    foreach ($this->collDrivers as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collUsersRelatedById !== null) {
                     foreach ($this->collUsersRelatedById as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1464,6 +1505,9 @@ abstract class BaseUser extends BaseObject implements Persistent
         if ($includeForeignObjects) {
             if (null !== $this->aUserRelatedByGodfatherId) {
                 $result['UserRelatedByGodfatherId'] = $this->aUserRelatedByGodfatherId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collDrivers) {
+                $result['Drivers'] = $this->collDrivers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collUsersRelatedById) {
                 $result['UsersRelatedById'] = $this->collUsersRelatedById->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1700,6 +1744,12 @@ abstract class BaseUser extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getDrivers() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addDriver($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getUsersRelatedById() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addUserRelatedById($relObj->copy($deepCopy));
@@ -1825,12 +1875,263 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('Driver' == $relationName) {
+            $this->initDrivers();
+        }
         if ('UserRelatedById' == $relationName) {
             $this->initUsersRelatedById();
         }
         if ('UserGame' == $relationName) {
             $this->initUserGames();
         }
+    }
+
+    /**
+     * Clears out the collDrivers collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addDrivers()
+     */
+    public function clearDrivers()
+    {
+        $this->collDrivers = null; // important to set this to null since that means it is uninitialized
+        $this->collDriversPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collDrivers collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialDrivers($v = true)
+    {
+        $this->collDriversPartial = $v;
+    }
+
+    /**
+     * Initializes the collDrivers collection.
+     *
+     * By default this just sets the collDrivers collection to an empty array (like clearcollDrivers());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initDrivers($overrideExisting = true)
+    {
+        if (null !== $this->collDrivers && !$overrideExisting) {
+            return;
+        }
+        $this->collDrivers = new PropelObjectCollection();
+        $this->collDrivers->setModel('Driver');
+    }
+
+    /**
+     * Gets an array of Driver objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Driver[] List of Driver objects
+     * @throws PropelException
+     */
+    public function getDrivers($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collDriversPartial && !$this->isNew();
+        if (null === $this->collDrivers || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collDrivers) {
+                // return empty collection
+                $this->initDrivers();
+            } else {
+                $collDrivers = DriverQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collDriversPartial && count($collDrivers)) {
+                      $this->initDrivers(false);
+
+                      foreach ($collDrivers as $obj) {
+                        if (false == $this->collDrivers->contains($obj)) {
+                          $this->collDrivers->append($obj);
+                        }
+                      }
+
+                      $this->collDriversPartial = true;
+                    }
+
+                    $collDrivers->getInternalIterator()->rewind();
+
+                    return $collDrivers;
+                }
+
+                if ($partial && $this->collDrivers) {
+                    foreach ($this->collDrivers as $obj) {
+                        if ($obj->isNew()) {
+                            $collDrivers[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collDrivers = $collDrivers;
+                $this->collDriversPartial = false;
+            }
+        }
+
+        return $this->collDrivers;
+    }
+
+    /**
+     * Sets a collection of Driver objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $drivers A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setDrivers(PropelCollection $drivers, PropelPDO $con = null)
+    {
+        $driversToDelete = $this->getDrivers(new Criteria(), $con)->diff($drivers);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->driversScheduledForDeletion = clone $driversToDelete;
+
+        foreach ($driversToDelete as $driverRemoved) {
+            $driverRemoved->setUser(null);
+        }
+
+        $this->collDrivers = null;
+        foreach ($drivers as $driver) {
+            $this->addDriver($driver);
+        }
+
+        $this->collDrivers = $drivers;
+        $this->collDriversPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Driver objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Driver objects.
+     * @throws PropelException
+     */
+    public function countDrivers(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collDriversPartial && !$this->isNew();
+        if (null === $this->collDrivers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collDrivers) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getDrivers());
+            }
+            $query = DriverQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collDrivers);
+    }
+
+    /**
+     * Method called to associate a Driver object to this object
+     * through the Driver foreign key attribute.
+     *
+     * @param    Driver $l Driver
+     * @return User The current object (for fluent API support)
+     */
+    public function addDriver(Driver $l)
+    {
+        if ($this->collDrivers === null) {
+            $this->initDrivers();
+            $this->collDriversPartial = true;
+        }
+        if (!in_array($l, $this->collDrivers->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddDriver($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Driver $driver The driver object to add.
+     */
+    protected function doAddDriver($driver)
+    {
+        $this->collDrivers[]= $driver;
+        $driver->setUser($this);
+    }
+
+    /**
+     * @param	Driver $driver The driver object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeDriver($driver)
+    {
+        if ($this->getDrivers()->contains($driver)) {
+            $this->collDrivers->remove($this->collDrivers->search($driver));
+            if (null === $this->driversScheduledForDeletion) {
+                $this->driversScheduledForDeletion = clone $this->collDrivers;
+                $this->driversScheduledForDeletion->clear();
+            }
+            $this->driversScheduledForDeletion[]= clone $driver;
+            $driver->setUser(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related Drivers from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Driver[] List of Driver objects
+     */
+    public function getDriversJoinSession($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = DriverQuery::create(null, $criteria);
+        $query->joinWith('Session', $join_behavior);
+
+        return $this->getDrivers($query, $con);
     }
 
     /**
@@ -2341,6 +2642,11 @@ abstract class BaseUser extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collDrivers) {
+                foreach ($this->collDrivers as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collUsersRelatedById) {
                 foreach ($this->collUsersRelatedById as $o) {
                     $o->clearAllReferences($deep);
@@ -2358,6 +2664,10 @@ abstract class BaseUser extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collDrivers instanceof PropelCollection) {
+            $this->collDrivers->clearIterator();
+        }
+        $this->collDrivers = null;
         if ($this->collUsersRelatedById instanceof PropelCollection) {
             $this->collUsersRelatedById->clearIterator();
         }

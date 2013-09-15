@@ -13,35 +13,31 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use Rdy4Racing\Models\Game;
-use Rdy4Racing\Models\GameMod;
-use Rdy4Racing\Models\GameModQuery;
-use Rdy4Racing\Models\GamePeer;
-use Rdy4Racing\Models\GameQuery;
 use Rdy4Racing\Models\Session;
 use Rdy4Racing\Models\SessionQuery;
-use Rdy4Racing\Models\UserGame;
-use Rdy4Racing\Models\UserGameQuery;
+use Rdy4Racing\Models\SessionType;
+use Rdy4Racing\Models\SessionTypePeer;
+use Rdy4Racing\Models\SessionTypeQuery;
 
 /**
- * Base class that represents a row from the 'game' table.
+ * Base class that represents a row from the 'session_type' table.
  *
  *
  *
  * @package    propel.generator..om
  */
-abstract class BaseGame extends BaseObject implements Persistent
+abstract class BaseSessionType extends BaseObject implements Persistent
 {
     /**
      * Peer class name
      */
-    const PEER = 'Rdy4Racing\\Models\\GamePeer';
+    const PEER = 'Rdy4Racing\\Models\\SessionTypePeer';
 
     /**
      * The Peer class.
      * Instance provides a convenient way of calling static methods on a class
      * that calling code may not be able to identify.
-     * @var        GamePeer
+     * @var        SessionTypePeer
      */
     protected static $peer;
 
@@ -52,40 +48,34 @@ abstract class BaseGame extends BaseObject implements Persistent
     protected $startCopy = false;
 
     /**
-     * The value for the game_id field.
+     * The value for the stype_id field.
      * @var        int
      */
-    protected $game_id;
+    protected $stype_id;
 
     /**
-     * The value for the game_code field.
+     * The value for the stype_constant field.
      * @var        string
      */
-    protected $game_code;
+    protected $stype_constant;
 
     /**
-     * The value for the game_name field.
+     * The value for the stype_name field.
      * @var        string
      */
-    protected $game_name;
+    protected $stype_name;
 
     /**
-     * @var        PropelObjectCollection|GameMod[] Collection to store aggregation of GameMod objects.
+     * The value for the stype_description field.
+     * @var        string
      */
-    protected $collGameMods;
-    protected $collGameModsPartial;
+    protected $stype_description;
 
     /**
      * @var        PropelObjectCollection|Session[] Collection to store aggregation of Session objects.
      */
     protected $collSessions;
     protected $collSessionsPartial;
-
-    /**
-     * @var        PropelObjectCollection|UserGame[] Collection to store aggregation of UserGame objects.
-     */
-    protected $collUserGames;
-    protected $collUserGamesPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -111,58 +101,57 @@ abstract class BaseGame extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $gameModsScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
     protected $sessionsScheduledForDeletion = null;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
-    protected $userGamesScheduledForDeletion = null;
-
-    /**
-     * Get the [game_id] column value.
+     * Get the [stype_id] column value.
      *
      * @return int
      */
     public function getId()
     {
 
-        return $this->game_id;
+        return $this->stype_id;
     }
 
     /**
-     * Get the [game_code] column value.
+     * Get the [stype_constant] column value.
      *
      * @return string
      */
-    public function getCode()
+    public function getConstant()
     {
 
-        return $this->game_code;
+        return $this->stype_constant;
     }
 
     /**
-     * Get the [game_name] column value.
+     * Get the [stype_name] column value.
      *
      * @return string
      */
     public function getName()
     {
 
-        return $this->game_name;
+        return $this->stype_name;
     }
 
     /**
-     * Set the value of [game_id] column.
+     * Get the [stype_description] column value.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+
+        return $this->stype_description;
+    }
+
+    /**
+     * Set the value of [stype_id] column.
      *
      * @param  int $v new value
-     * @return Game The current object (for fluent API support)
+     * @return SessionType The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -170,9 +159,9 @@ abstract class BaseGame extends BaseObject implements Persistent
             $v = (int) $v;
         }
 
-        if ($this->game_id !== $v) {
-            $this->game_id = $v;
-            $this->modifiedColumns[] = GamePeer::GAME_ID;
+        if ($this->stype_id !== $v) {
+            $this->stype_id = $v;
+            $this->modifiedColumns[] = SessionTypePeer::STYPE_ID;
         }
 
 
@@ -180,31 +169,31 @@ abstract class BaseGame extends BaseObject implements Persistent
     } // setId()
 
     /**
-     * Set the value of [game_code] column.
+     * Set the value of [stype_constant] column.
      *
      * @param  string $v new value
-     * @return Game The current object (for fluent API support)
+     * @return SessionType The current object (for fluent API support)
      */
-    public function setCode($v)
+    public function setConstant($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
-        if ($this->game_code !== $v) {
-            $this->game_code = $v;
-            $this->modifiedColumns[] = GamePeer::GAME_CODE;
+        if ($this->stype_constant !== $v) {
+            $this->stype_constant = $v;
+            $this->modifiedColumns[] = SessionTypePeer::STYPE_CONSTANT;
         }
 
 
         return $this;
-    } // setCode()
+    } // setConstant()
 
     /**
-     * Set the value of [game_name] column.
+     * Set the value of [stype_name] column.
      *
      * @param  string $v new value
-     * @return Game The current object (for fluent API support)
+     * @return SessionType The current object (for fluent API support)
      */
     public function setName($v)
     {
@@ -212,14 +201,35 @@ abstract class BaseGame extends BaseObject implements Persistent
             $v = (string) $v;
         }
 
-        if ($this->game_name !== $v) {
-            $this->game_name = $v;
-            $this->modifiedColumns[] = GamePeer::GAME_NAME;
+        if ($this->stype_name !== $v) {
+            $this->stype_name = $v;
+            $this->modifiedColumns[] = SessionTypePeer::STYPE_NAME;
         }
 
 
         return $this;
     } // setName()
+
+    /**
+     * Set the value of [stype_description] column.
+     *
+     * @param  string $v new value
+     * @return SessionType The current object (for fluent API support)
+     */
+    public function setDescription($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->stype_description !== $v) {
+            $this->stype_description = $v;
+            $this->modifiedColumns[] = SessionTypePeer::STYPE_DESCRIPTION;
+        }
+
+
+        return $this;
+    } // setDescription()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -253,9 +263,10 @@ abstract class BaseGame extends BaseObject implements Persistent
     {
         try {
 
-            $this->game_id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->game_code = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->game_name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->stype_id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
+            $this->stype_constant = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->stype_name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->stype_description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -265,10 +276,10 @@ abstract class BaseGame extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 3; // 3 = GamePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = SessionTypePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException("Error populating Game object", $e);
+            throw new PropelException("Error populating SessionType object", $e);
         }
     }
 
@@ -311,13 +322,13 @@ abstract class BaseGame extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(GamePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(SessionTypePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $stmt = GamePeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+        $stmt = SessionTypePeer::doSelectStmt($this->buildPkeyCriteria(), $con);
         $row = $stmt->fetch(PDO::FETCH_NUM);
         $stmt->closeCursor();
         if (!$row) {
@@ -327,11 +338,7 @@ abstract class BaseGame extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collGameMods = null;
-
             $this->collSessions = null;
-
-            $this->collUserGames = null;
 
         } // if (deep)
     }
@@ -353,12 +360,12 @@ abstract class BaseGame extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(GamePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(SessionTypePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
         try {
-            $deleteQuery = GameQuery::create()
+            $deleteQuery = SessionTypeQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -396,7 +403,7 @@ abstract class BaseGame extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(GamePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(SessionTypePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
@@ -416,7 +423,7 @@ abstract class BaseGame extends BaseObject implements Persistent
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                GamePeer::addInstanceToPool($this);
+                SessionTypePeer::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -457,23 +464,6 @@ abstract class BaseGame extends BaseObject implements Persistent
                 $this->resetModified();
             }
 
-            if ($this->gameModsScheduledForDeletion !== null) {
-                if (!$this->gameModsScheduledForDeletion->isEmpty()) {
-                    GameModQuery::create()
-                        ->filterByPrimaryKeys($this->gameModsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->gameModsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collGameMods !== null) {
-                foreach ($this->collGameMods as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             if ($this->sessionsScheduledForDeletion !== null) {
                 if (!$this->sessionsScheduledForDeletion->isEmpty()) {
                     SessionQuery::create()
@@ -485,23 +475,6 @@ abstract class BaseGame extends BaseObject implements Persistent
 
             if ($this->collSessions !== null) {
                 foreach ($this->collSessions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->userGamesScheduledForDeletion !== null) {
-                if (!$this->userGamesScheduledForDeletion->isEmpty()) {
-                    UserGameQuery::create()
-                        ->filterByPrimaryKeys($this->userGamesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->userGamesScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collUserGames !== null) {
-                foreach ($this->collUserGames as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -528,24 +501,27 @@ abstract class BaseGame extends BaseObject implements Persistent
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[] = GamePeer::GAME_ID;
-        if (null !== $this->game_id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . GamePeer::GAME_ID . ')');
+        $this->modifiedColumns[] = SessionTypePeer::STYPE_ID;
+        if (null !== $this->stype_id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . SessionTypePeer::STYPE_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(GamePeer::GAME_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`game_id`';
+        if ($this->isColumnModified(SessionTypePeer::STYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`stype_id`';
         }
-        if ($this->isColumnModified(GamePeer::GAME_CODE)) {
-            $modifiedColumns[':p' . $index++]  = '`game_code`';
+        if ($this->isColumnModified(SessionTypePeer::STYPE_CONSTANT)) {
+            $modifiedColumns[':p' . $index++]  = '`stype_constant`';
         }
-        if ($this->isColumnModified(GamePeer::GAME_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '`game_name`';
+        if ($this->isColumnModified(SessionTypePeer::STYPE_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '`stype_name`';
+        }
+        if ($this->isColumnModified(SessionTypePeer::STYPE_DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = '`stype_description`';
         }
 
         $sql = sprintf(
-            'INSERT INTO `game` (%s) VALUES (%s)',
+            'INSERT INTO `session_type` (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -554,14 +530,17 @@ abstract class BaseGame extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '`game_id`':
-                        $stmt->bindValue($identifier, $this->game_id, PDO::PARAM_INT);
+                    case '`stype_id`':
+                        $stmt->bindValue($identifier, $this->stype_id, PDO::PARAM_INT);
                         break;
-                    case '`game_code`':
-                        $stmt->bindValue($identifier, $this->game_code, PDO::PARAM_STR);
+                    case '`stype_constant`':
+                        $stmt->bindValue($identifier, $this->stype_constant, PDO::PARAM_STR);
                         break;
-                    case '`game_name`':
-                        $stmt->bindValue($identifier, $this->game_name, PDO::PARAM_STR);
+                    case '`stype_name`':
+                        $stmt->bindValue($identifier, $this->stype_name, PDO::PARAM_STR);
+                        break;
+                    case '`stype_description`':
+                        $stmt->bindValue($identifier, $this->stype_description, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -657,29 +636,13 @@ abstract class BaseGame extends BaseObject implements Persistent
             $failureMap = array();
 
 
-            if (($retval = GamePeer::doValidate($this, $columns)) !== true) {
+            if (($retval = SessionTypePeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
 
 
-                if ($this->collGameMods !== null) {
-                    foreach ($this->collGameMods as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-
                 if ($this->collSessions !== null) {
                     foreach ($this->collSessions as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-
-                if ($this->collUserGames !== null) {
-                    foreach ($this->collUserGames as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -705,7 +668,7 @@ abstract class BaseGame extends BaseObject implements Persistent
      */
     public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = GamePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = SessionTypePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -725,10 +688,13 @@ abstract class BaseGame extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getCode();
+                return $this->getConstant();
                 break;
             case 2:
                 return $this->getName();
+                break;
+            case 3:
+                return $this->getDescription();
                 break;
             default:
                 return null;
@@ -753,15 +719,16 @@ abstract class BaseGame extends BaseObject implements Persistent
      */
     public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Game'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['SessionType'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Game'][$this->getPrimaryKey()] = true;
-        $keys = GamePeer::getFieldNames($keyType);
+        $alreadyDumpedObjects['SessionType'][$this->getPrimaryKey()] = true;
+        $keys = SessionTypePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getCode(),
+            $keys[1] => $this->getConstant(),
             $keys[2] => $this->getName(),
+            $keys[3] => $this->getDescription(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach($virtualColumns as $key => $virtualColumn)
@@ -770,14 +737,8 @@ abstract class BaseGame extends BaseObject implements Persistent
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collGameMods) {
-                $result['GameMods'] = $this->collGameMods->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
             if (null !== $this->collSessions) {
                 $result['Sessions'] = $this->collSessions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collUserGames) {
-                $result['UserGames'] = $this->collUserGames->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -797,7 +758,7 @@ abstract class BaseGame extends BaseObject implements Persistent
      */
     public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = GamePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = SessionTypePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
     }
@@ -817,10 +778,13 @@ abstract class BaseGame extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setCode($value);
+                $this->setConstant($value);
                 break;
             case 2:
                 $this->setName($value);
+                break;
+            case 3:
+                $this->setDescription($value);
                 break;
         } // switch()
     }
@@ -844,11 +808,12 @@ abstract class BaseGame extends BaseObject implements Persistent
      */
     public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
     {
-        $keys = GamePeer::getFieldNames($keyType);
+        $keys = SessionTypePeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setCode($arr[$keys[1]]);
+        if (array_key_exists($keys[1], $arr)) $this->setConstant($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
     }
 
     /**
@@ -858,11 +823,12 @@ abstract class BaseGame extends BaseObject implements Persistent
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(GamePeer::DATABASE_NAME);
+        $criteria = new Criteria(SessionTypePeer::DATABASE_NAME);
 
-        if ($this->isColumnModified(GamePeer::GAME_ID)) $criteria->add(GamePeer::GAME_ID, $this->game_id);
-        if ($this->isColumnModified(GamePeer::GAME_CODE)) $criteria->add(GamePeer::GAME_CODE, $this->game_code);
-        if ($this->isColumnModified(GamePeer::GAME_NAME)) $criteria->add(GamePeer::GAME_NAME, $this->game_name);
+        if ($this->isColumnModified(SessionTypePeer::STYPE_ID)) $criteria->add(SessionTypePeer::STYPE_ID, $this->stype_id);
+        if ($this->isColumnModified(SessionTypePeer::STYPE_CONSTANT)) $criteria->add(SessionTypePeer::STYPE_CONSTANT, $this->stype_constant);
+        if ($this->isColumnModified(SessionTypePeer::STYPE_NAME)) $criteria->add(SessionTypePeer::STYPE_NAME, $this->stype_name);
+        if ($this->isColumnModified(SessionTypePeer::STYPE_DESCRIPTION)) $criteria->add(SessionTypePeer::STYPE_DESCRIPTION, $this->stype_description);
 
         return $criteria;
     }
@@ -877,8 +843,8 @@ abstract class BaseGame extends BaseObject implements Persistent
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(GamePeer::DATABASE_NAME);
-        $criteria->add(GamePeer::GAME_ID, $this->game_id);
+        $criteria = new Criteria(SessionTypePeer::DATABASE_NAME);
+        $criteria->add(SessionTypePeer::STYPE_ID, $this->stype_id);
 
         return $criteria;
     }
@@ -893,7 +859,7 @@ abstract class BaseGame extends BaseObject implements Persistent
     }
 
     /**
-     * Generic method to set the primary key (game_id column).
+     * Generic method to set the primary key (stype_id column).
      *
      * @param  int $key Primary key.
      * @return void
@@ -919,15 +885,16 @@ abstract class BaseGame extends BaseObject implements Persistent
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of Game (or compatible) type.
+     * @param object $copyObj An object of SessionType (or compatible) type.
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setCode($this->getCode());
+        $copyObj->setConstant($this->getConstant());
         $copyObj->setName($this->getName());
+        $copyObj->setDescription($this->getDescription());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -936,21 +903,9 @@ abstract class BaseGame extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
-            foreach ($this->getGameMods() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addGameMod($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getSessions() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addSession($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getUserGames() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addUserGame($relObj->copy($deepCopy));
                 }
             }
 
@@ -973,7 +928,7 @@ abstract class BaseGame extends BaseObject implements Persistent
      * objects.
      *
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return Game Clone of current object.
+     * @return SessionType Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -993,12 +948,12 @@ abstract class BaseGame extends BaseObject implements Persistent
      * same instance for all member of this class. The method could therefore
      * be static, but this would prevent one from overriding the behavior.
      *
-     * @return GamePeer
+     * @return SessionTypePeer
      */
     public function getPeer()
     {
         if (self::$peer === null) {
-            self::$peer = new GamePeer();
+            self::$peer = new SessionTypePeer();
         }
 
         return self::$peer;
@@ -1015,235 +970,9 @@ abstract class BaseGame extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('GameMod' == $relationName) {
-            $this->initGameMods();
-        }
         if ('Session' == $relationName) {
             $this->initSessions();
         }
-        if ('UserGame' == $relationName) {
-            $this->initUserGames();
-        }
-    }
-
-    /**
-     * Clears out the collGameMods collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Game The current object (for fluent API support)
-     * @see        addGameMods()
-     */
-    public function clearGameMods()
-    {
-        $this->collGameMods = null; // important to set this to null since that means it is uninitialized
-        $this->collGameModsPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collGameMods collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialGameMods($v = true)
-    {
-        $this->collGameModsPartial = $v;
-    }
-
-    /**
-     * Initializes the collGameMods collection.
-     *
-     * By default this just sets the collGameMods collection to an empty array (like clearcollGameMods());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initGameMods($overrideExisting = true)
-    {
-        if (null !== $this->collGameMods && !$overrideExisting) {
-            return;
-        }
-        $this->collGameMods = new PropelObjectCollection();
-        $this->collGameMods->setModel('GameMod');
-    }
-
-    /**
-     * Gets an array of GameMod objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Game is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|GameMod[] List of GameMod objects
-     * @throws PropelException
-     */
-    public function getGameMods($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collGameModsPartial && !$this->isNew();
-        if (null === $this->collGameMods || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collGameMods) {
-                // return empty collection
-                $this->initGameMods();
-            } else {
-                $collGameMods = GameModQuery::create(null, $criteria)
-                    ->filterByGame($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collGameModsPartial && count($collGameMods)) {
-                      $this->initGameMods(false);
-
-                      foreach ($collGameMods as $obj) {
-                        if (false == $this->collGameMods->contains($obj)) {
-                          $this->collGameMods->append($obj);
-                        }
-                      }
-
-                      $this->collGameModsPartial = true;
-                    }
-
-                    $collGameMods->getInternalIterator()->rewind();
-
-                    return $collGameMods;
-                }
-
-                if ($partial && $this->collGameMods) {
-                    foreach ($this->collGameMods as $obj) {
-                        if ($obj->isNew()) {
-                            $collGameMods[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collGameMods = $collGameMods;
-                $this->collGameModsPartial = false;
-            }
-        }
-
-        return $this->collGameMods;
-    }
-
-    /**
-     * Sets a collection of GameMod objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $gameMods A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return Game The current object (for fluent API support)
-     */
-    public function setGameMods(PropelCollection $gameMods, PropelPDO $con = null)
-    {
-        $gameModsToDelete = $this->getGameMods(new Criteria(), $con)->diff($gameMods);
-
-
-        $this->gameModsScheduledForDeletion = $gameModsToDelete;
-
-        foreach ($gameModsToDelete as $gameModRemoved) {
-            $gameModRemoved->setGame(null);
-        }
-
-        $this->collGameMods = null;
-        foreach ($gameMods as $gameMod) {
-            $this->addGameMod($gameMod);
-        }
-
-        $this->collGameMods = $gameMods;
-        $this->collGameModsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related GameMod objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related GameMod objects.
-     * @throws PropelException
-     */
-    public function countGameMods(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collGameModsPartial && !$this->isNew();
-        if (null === $this->collGameMods || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collGameMods) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getGameMods());
-            }
-            $query = GameModQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByGame($this)
-                ->count($con);
-        }
-
-        return count($this->collGameMods);
-    }
-
-    /**
-     * Method called to associate a GameMod object to this object
-     * through the GameMod foreign key attribute.
-     *
-     * @param    GameMod $l GameMod
-     * @return Game The current object (for fluent API support)
-     */
-    public function addGameMod(GameMod $l)
-    {
-        if ($this->collGameMods === null) {
-            $this->initGameMods();
-            $this->collGameModsPartial = true;
-        }
-        if (!in_array($l, $this->collGameMods->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddGameMod($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	GameMod $gameMod The gameMod object to add.
-     */
-    protected function doAddGameMod($gameMod)
-    {
-        $this->collGameMods[]= $gameMod;
-        $gameMod->setGame($this);
-    }
-
-    /**
-     * @param	GameMod $gameMod The gameMod object to remove.
-     * @return Game The current object (for fluent API support)
-     */
-    public function removeGameMod($gameMod)
-    {
-        if ($this->getGameMods()->contains($gameMod)) {
-            $this->collGameMods->remove($this->collGameMods->search($gameMod));
-            if (null === $this->gameModsScheduledForDeletion) {
-                $this->gameModsScheduledForDeletion = clone $this->collGameMods;
-                $this->gameModsScheduledForDeletion->clear();
-            }
-            $this->gameModsScheduledForDeletion[]= clone $gameMod;
-            $gameMod->setGame(null);
-        }
-
-        return $this;
     }
 
     /**
@@ -1252,7 +981,7 @@ abstract class BaseGame extends BaseObject implements Persistent
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return Game The current object (for fluent API support)
+     * @return SessionType The current object (for fluent API support)
      * @see        addSessions()
      */
     public function clearSessions()
@@ -1300,7 +1029,7 @@ abstract class BaseGame extends BaseObject implements Persistent
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Game is new, it will return
+     * If this SessionType is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
@@ -1317,7 +1046,7 @@ abstract class BaseGame extends BaseObject implements Persistent
                 $this->initSessions();
             } else {
                 $collSessions = SessionQuery::create(null, $criteria)
-                    ->filterByGame($this)
+                    ->filterBySessionType($this)
                     ->find($con);
                 if (null !== $criteria) {
                     if (false !== $this->collSessionsPartial && count($collSessions)) {
@@ -1361,7 +1090,7 @@ abstract class BaseGame extends BaseObject implements Persistent
      *
      * @param PropelCollection $sessions A Propel collection.
      * @param PropelPDO $con Optional connection object
-     * @return Game The current object (for fluent API support)
+     * @return SessionType The current object (for fluent API support)
      */
     public function setSessions(PropelCollection $sessions, PropelPDO $con = null)
     {
@@ -1371,7 +1100,7 @@ abstract class BaseGame extends BaseObject implements Persistent
         $this->sessionsScheduledForDeletion = $sessionsToDelete;
 
         foreach ($sessionsToDelete as $sessionRemoved) {
-            $sessionRemoved->setGame(null);
+            $sessionRemoved->setSessionType(null);
         }
 
         $this->collSessions = null;
@@ -1411,7 +1140,7 @@ abstract class BaseGame extends BaseObject implements Persistent
             }
 
             return $query
-                ->filterByGame($this)
+                ->filterBySessionType($this)
                 ->count($con);
         }
 
@@ -1423,7 +1152,7 @@ abstract class BaseGame extends BaseObject implements Persistent
      * through the Session foreign key attribute.
      *
      * @param    Session $l Session
-     * @return Game The current object (for fluent API support)
+     * @return SessionType The current object (for fluent API support)
      */
     public function addSession(Session $l)
     {
@@ -1444,12 +1173,12 @@ abstract class BaseGame extends BaseObject implements Persistent
     protected function doAddSession($session)
     {
         $this->collSessions[]= $session;
-        $session->setGame($this);
+        $session->setSessionType($this);
     }
 
     /**
      * @param	Session $session The session object to remove.
-     * @return Game The current object (for fluent API support)
+     * @return SessionType The current object (for fluent API support)
      */
     public function removeSession($session)
     {
@@ -1460,7 +1189,7 @@ abstract class BaseGame extends BaseObject implements Persistent
                 $this->sessionsScheduledForDeletion->clear();
             }
             $this->sessionsScheduledForDeletion[]= clone $session;
-            $session->setGame(null);
+            $session->setSessionType(null);
         }
 
         return $this;
@@ -1470,13 +1199,38 @@ abstract class BaseGame extends BaseObject implements Persistent
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Game is new, it will return
-     * an empty collection; or if this Game has previously
+     * Otherwise if this SessionType is new, it will return
+     * an empty collection; or if this SessionType has previously
      * been saved, it will retrieve related Sessions from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Game.
+     * actually need in SessionType.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|Session[] List of Session objects
+     */
+    public function getSessionsJoinGame($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = SessionQuery::create(null, $criteria);
+        $query->joinWith('Game', $join_behavior);
+
+        return $this->getSessions($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this SessionType is new, it will return
+     * an empty collection; or if this SessionType has previously
+     * been saved, it will retrieve related Sessions from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in SessionType.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
@@ -1491,284 +1245,15 @@ abstract class BaseGame extends BaseObject implements Persistent
         return $this->getSessions($query, $con);
     }
 
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Game is new, it will return
-     * an empty collection; or if this Game has previously
-     * been saved, it will retrieve related Sessions from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Game.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|Session[] List of Session objects
-     */
-    public function getSessionsJoinSessionType($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = SessionQuery::create(null, $criteria);
-        $query->joinWith('SessionType', $join_behavior);
-
-        return $this->getSessions($query, $con);
-    }
-
-    /**
-     * Clears out the collUserGames collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Game The current object (for fluent API support)
-     * @see        addUserGames()
-     */
-    public function clearUserGames()
-    {
-        $this->collUserGames = null; // important to set this to null since that means it is uninitialized
-        $this->collUserGamesPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collUserGames collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialUserGames($v = true)
-    {
-        $this->collUserGamesPartial = $v;
-    }
-
-    /**
-     * Initializes the collUserGames collection.
-     *
-     * By default this just sets the collUserGames collection to an empty array (like clearcollUserGames());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initUserGames($overrideExisting = true)
-    {
-        if (null !== $this->collUserGames && !$overrideExisting) {
-            return;
-        }
-        $this->collUserGames = new PropelObjectCollection();
-        $this->collUserGames->setModel('UserGame');
-    }
-
-    /**
-     * Gets an array of UserGame objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Game is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|UserGame[] List of UserGame objects
-     * @throws PropelException
-     */
-    public function getUserGames($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collUserGamesPartial && !$this->isNew();
-        if (null === $this->collUserGames || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collUserGames) {
-                // return empty collection
-                $this->initUserGames();
-            } else {
-                $collUserGames = UserGameQuery::create(null, $criteria)
-                    ->filterByGame($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collUserGamesPartial && count($collUserGames)) {
-                      $this->initUserGames(false);
-
-                      foreach ($collUserGames as $obj) {
-                        if (false == $this->collUserGames->contains($obj)) {
-                          $this->collUserGames->append($obj);
-                        }
-                      }
-
-                      $this->collUserGamesPartial = true;
-                    }
-
-                    $collUserGames->getInternalIterator()->rewind();
-
-                    return $collUserGames;
-                }
-
-                if ($partial && $this->collUserGames) {
-                    foreach ($this->collUserGames as $obj) {
-                        if ($obj->isNew()) {
-                            $collUserGames[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collUserGames = $collUserGames;
-                $this->collUserGamesPartial = false;
-            }
-        }
-
-        return $this->collUserGames;
-    }
-
-    /**
-     * Sets a collection of UserGame objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $userGames A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return Game The current object (for fluent API support)
-     */
-    public function setUserGames(PropelCollection $userGames, PropelPDO $con = null)
-    {
-        $userGamesToDelete = $this->getUserGames(new Criteria(), $con)->diff($userGames);
-
-
-        $this->userGamesScheduledForDeletion = $userGamesToDelete;
-
-        foreach ($userGamesToDelete as $userGameRemoved) {
-            $userGameRemoved->setGame(null);
-        }
-
-        $this->collUserGames = null;
-        foreach ($userGames as $userGame) {
-            $this->addUserGame($userGame);
-        }
-
-        $this->collUserGames = $userGames;
-        $this->collUserGamesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related UserGame objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related UserGame objects.
-     * @throws PropelException
-     */
-    public function countUserGames(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collUserGamesPartial && !$this->isNew();
-        if (null === $this->collUserGames || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collUserGames) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getUserGames());
-            }
-            $query = UserGameQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByGame($this)
-                ->count($con);
-        }
-
-        return count($this->collUserGames);
-    }
-
-    /**
-     * Method called to associate a UserGame object to this object
-     * through the UserGame foreign key attribute.
-     *
-     * @param    UserGame $l UserGame
-     * @return Game The current object (for fluent API support)
-     */
-    public function addUserGame(UserGame $l)
-    {
-        if ($this->collUserGames === null) {
-            $this->initUserGames();
-            $this->collUserGamesPartial = true;
-        }
-        if (!in_array($l, $this->collUserGames->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddUserGame($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	UserGame $userGame The userGame object to add.
-     */
-    protected function doAddUserGame($userGame)
-    {
-        $this->collUserGames[]= $userGame;
-        $userGame->setGame($this);
-    }
-
-    /**
-     * @param	UserGame $userGame The userGame object to remove.
-     * @return Game The current object (for fluent API support)
-     */
-    public function removeUserGame($userGame)
-    {
-        if ($this->getUserGames()->contains($userGame)) {
-            $this->collUserGames->remove($this->collUserGames->search($userGame));
-            if (null === $this->userGamesScheduledForDeletion) {
-                $this->userGamesScheduledForDeletion = clone $this->collUserGames;
-                $this->userGamesScheduledForDeletion->clear();
-            }
-            $this->userGamesScheduledForDeletion[]= clone $userGame;
-            $userGame->setGame(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Game is new, it will return
-     * an empty collection; or if this Game has previously
-     * been saved, it will retrieve related UserGames from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Game.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|UserGame[] List of UserGame objects
-     */
-    public function getUserGamesJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = UserGameQuery::create(null, $criteria);
-        $query->joinWith('User', $join_behavior);
-
-        return $this->getUserGames($query, $con);
-    }
-
     /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
     {
-        $this->game_id = null;
-        $this->game_code = null;
-        $this->game_name = null;
+        $this->stype_id = null;
+        $this->stype_constant = null;
+        $this->stype_name = null;
+        $this->stype_description = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1791,18 +1276,8 @@ abstract class BaseGame extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collGameMods) {
-                foreach ($this->collGameMods as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collSessions) {
                 foreach ($this->collSessions as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collUserGames) {
-                foreach ($this->collUserGames as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -1810,18 +1285,10 @@ abstract class BaseGame extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collGameMods instanceof PropelCollection) {
-            $this->collGameMods->clearIterator();
-        }
-        $this->collGameMods = null;
         if ($this->collSessions instanceof PropelCollection) {
             $this->collSessions->clearIterator();
         }
         $this->collSessions = null;
-        if ($this->collUserGames instanceof PropelCollection) {
-            $this->collUserGames->clearIterator();
-        }
-        $this->collUserGames = null;
     }
 
     /**
@@ -1831,7 +1298,7 @@ abstract class BaseGame extends BaseObject implements Persistent
      */
     public function __toString()
     {
-        return (string) $this->exportTo(GamePeer::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(SessionTypePeer::DEFAULT_STRING_FORMAT);
     }
 
     /**

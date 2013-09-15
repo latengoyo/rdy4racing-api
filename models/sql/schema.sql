@@ -4,6 +4,31 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ---------------------------------------------------------------------
+-- driver
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `driver`;
+
+CREATE TABLE `driver`
+(
+    `driver_session_id` INTEGER NOT NULL,
+    `driver_user_id` INTEGER NOT NULL,
+    `driver_rank` VARCHAR(1) NOT NULL,
+    `driver_mmr_start` INTEGER NOT NULL,
+    `driver_rating_start` INTEGER NOT NULL,
+    `driver_mmr_end` INTEGER,
+    `driver_rating_end` INTEGER,
+    PRIMARY KEY (`driver_session_id`,`driver_user_id`),
+    INDEX `driver_FI_2` (`driver_user_id`),
+    CONSTRAINT `driver_FK_1`
+        FOREIGN KEY (`driver_session_id`)
+        REFERENCES `session` (`session_id`),
+    CONSTRAINT `driver_FK_2`
+        FOREIGN KEY (`driver_user_id`)
+        REFERENCES `user` (`user_id`)
+) ENGINE=InnoDB CHARACTER SET='utf8';
+
+-- ---------------------------------------------------------------------
 -- game
 -- ---------------------------------------------------------------------
 
@@ -44,6 +69,64 @@ CREATE TABLE `gamemod`
     CONSTRAINT `gamemod_FK_1`
         FOREIGN KEY (`gmod_game_id`)
         REFERENCES `game` (`game_id`)
+) ENGINE=InnoDB CHARACTER SET='utf8';
+
+-- ---------------------------------------------------------------------
+-- session
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `session`;
+
+CREATE TABLE `session`
+(
+    `session_id` INTEGER NOT NULL AUTO_INCREMENT,
+    `session_game_id` INTEGER NOT NULL,
+    `session_stype_id` INTEGER NOT NULL,
+    `session_sstate_id` INTEGER NOT NULL,
+    `session_description` VARCHAR(255),
+    PRIMARY KEY (`session_id`),
+    INDEX `session_FI_1` (`session_game_id`),
+    INDEX `session_FI_2` (`session_sstate_id`),
+    INDEX `session_FI_3` (`session_stype_id`),
+    CONSTRAINT `session_FK_1`
+        FOREIGN KEY (`session_game_id`)
+        REFERENCES `game` (`game_id`),
+    CONSTRAINT `session_FK_2`
+        FOREIGN KEY (`session_sstate_id`)
+        REFERENCES `session_state` (`sstate_id`),
+    CONSTRAINT `session_FK_3`
+        FOREIGN KEY (`session_stype_id`)
+        REFERENCES `session_type` (`stype_id`)
+) ENGINE=InnoDB CHARACTER SET='utf8';
+
+-- ---------------------------------------------------------------------
+-- session_type
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `session_type`;
+
+CREATE TABLE `session_type`
+(
+    `stype_id` INTEGER NOT NULL AUTO_INCREMENT,
+    `stype_constant` VARCHAR(24) NOT NULL,
+    `stype_name` VARCHAR(24) NOT NULL,
+    `stype_description` VARCHAR(255),
+    PRIMARY KEY (`stype_id`)
+) ENGINE=InnoDB CHARACTER SET='utf8';
+
+-- ---------------------------------------------------------------------
+-- session_state
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `session_state`;
+
+CREATE TABLE `session_state`
+(
+    `sstate_id` INTEGER NOT NULL AUTO_INCREMENT,
+    `sstate_constant` VARCHAR(24) NOT NULL,
+    `sstate_name` VARCHAR(24) NOT NULL,
+    `sstate_description` VARCHAR(255),
+    PRIMARY KEY (`sstate_id`)
 ) ENGINE=InnoDB CHARACTER SET='utf8';
 
 -- ---------------------------------------------------------------------

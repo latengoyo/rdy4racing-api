@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="rdy4racing" namespace="Rdy4Racing\Models" defaultIdMethod="native">
+	<table name="driver" phpName="Driver">
+		<column name="driver_session_id" phpName="SessionId" type="integer" required="true" primaryKey="true" />
+		<column name="driver_user_id" phpName="UserId" type="integer" required="true" primaryKey="true" />
+		<column name="driver_rank" phpName="Rank" type="varchar" size="1" required="true" />
+		<column name="driver_mmr_start" phpName="MMRStart" type="integer" required="true" />
+		<column name="driver_rating_start" phpName="RatingStart" type="integer" required="true" />
+		<column name="driver_mmr_end" phpName="MMREnd" type="integer" required="false" />
+		<column name="driver_rating_end" phpName="RatingEnd" type="integer" required="false" />
+		<foreign-key foreignTable="session">
+			<reference local="driver_session_id" foreign="session_id" phpName="Session"/>
+		</foreign-key>
+				<foreign-key foreignTable="user">
+			<reference local="driver_user_id" foreign="user_id" phpName="User"/>
+		</foreign-key>
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB"/>
+			<parameter name="Charset" value="utf8"/>
+		</vendor>
+	</table>
 	<table name="game" phpName="Game">
 		<column name="game_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
 		<column name="game_code" phpName="Code" type="varchar" size="8" required="true" />
@@ -39,6 +58,46 @@
 		<foreign-key foreignTable="game">
 			<reference local="gmod_game_id" foreign="game_id" phpName="Game"/>
 		</foreign-key>
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB"/>
+			<parameter name="Charset" value="utf8"/>
+		</vendor>
+	</table>
+	<table name="session" phpName="Session">
+		<column name="session_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="session_game_id" phpName="GameId" type="integer" required="true" />
+		<column name="session_stype_id" phpName="TypeId" type="integer" required="true" />
+		<column name="session_sstate_id" phpName="StateId" type="integer" required="true" />
+		<column name="session_description" phpName="Description" type="varchar" size="255" required="false" />
+		<foreign-key foreignTable="game">
+			<reference local="session_game_id" foreign="game_id" phpName="Game"/>
+		</foreign-key>
+		<foreign-key foreignTable="session_state">
+			<reference local="session_sstate_id" foreign="sstate_id" phpName="State"/>
+		</foreign-key>
+		<foreign-key foreignTable="session_type">
+			<reference local="session_stype_id" foreign="stype_id" phpName="Type"/>
+		</foreign-key>
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB"/>
+			<parameter name="Charset" value="utf8"/>
+		</vendor>
+	</table>
+	<table name="session_type" phpName="SessionType">
+		<column name="stype_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="stype_constant" phpName="Constant" type="varchar" size="24" required="true" />
+		<column name="stype_name" phpName="Name" type="varchar" size="24" required="true" />
+		<column name="stype_description" phpName="Description" type="varchar" size="255" required="false" />
+		<vendor type="mysql">
+			<parameter name="Engine" value="InnoDB"/>
+			<parameter name="Charset" value="utf8"/>
+		</vendor>
+	</table>
+	<table name="session_state" phpName="SessionState">
+		<column name="sstate_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="sstate_constant" phpName="Constant" type="varchar" size="24" required="true" />
+		<column name="sstate_name" phpName="Name" type="varchar" size="24" required="true" />
+		<column name="sstate_description" phpName="Description" type="varchar" size="255" required="false" />
 		<vendor type="mysql">
 			<parameter name="Engine" value="InnoDB"/>
 			<parameter name="Charset" value="utf8"/>

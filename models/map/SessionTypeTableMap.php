@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'game' table.
+ * This class defines the structure of the 'session_type' table.
  *
  *
  *
@@ -18,13 +18,13 @@ use \TableMap;
  *
  * @package    propel.generator..map
  */
-class GameTableMap extends TableMap
+class SessionTypeTableMap extends TableMap
 {
 
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.map.GameTableMap';
+    const CLASS_NAME = '.map.SessionTypeTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -36,15 +36,16 @@ class GameTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('game');
-        $this->setPhpName('Game');
-        $this->setClassname('Rdy4Racing\\Models\\Game');
+        $this->setName('session_type');
+        $this->setPhpName('SessionType');
+        $this->setClassname('Rdy4Racing\\Models\\SessionType');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('game_id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('game_code', 'Code', 'VARCHAR', true, 8, null);
-        $this->addColumn('game_name', 'Name', 'VARCHAR', true, 32, null);
+        $this->addPrimaryKey('stype_id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('stype_constant', 'Constant', 'VARCHAR', true, 24, null);
+        $this->addColumn('stype_name', 'Name', 'VARCHAR', true, 24, null);
+        $this->addColumn('stype_description', 'Description', 'VARCHAR', false, 255, null);
         // validators
     } // initialize()
 
@@ -53,9 +54,7 @@ class GameTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('GameMod', 'Rdy4Racing\\Models\\GameMod', RelationMap::ONE_TO_MANY, array('game_id' => 'gmod_game_id', ), null, null, 'GameMods');
-        $this->addRelation('Session', 'Rdy4Racing\\Models\\Session', RelationMap::ONE_TO_MANY, array('game_id' => 'session_game_id', ), null, null, 'Sessions');
-        $this->addRelation('UserGame', 'Rdy4Racing\\Models\\UserGame', RelationMap::ONE_TO_MANY, array('game_id' => 'usgm_game_id', ), null, null, 'UserGames');
+        $this->addRelation('Session', 'Rdy4Racing\\Models\\Session', RelationMap::ONE_TO_MANY, array('stype_id' => 'session_stype_id', ), null, null, 'Sessions');
     } // buildRelations()
 
-} // GameTableMap
+} // SessionTypeTableMap

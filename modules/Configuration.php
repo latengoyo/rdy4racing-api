@@ -90,6 +90,15 @@ class Configuration {
 	}
 	
 	/**
+	 * Gets the config
+	 * 
+	 * @return array
+	 */
+	public function getConfig () {
+		return $this->config;
+	}
+	
+	/**
 	 * Project autoloader
 	 * 
 	 * @param string $className
