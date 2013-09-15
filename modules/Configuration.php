@@ -2,7 +2,7 @@
 
 namespace Rdy4Racing\Modules;
 
-use Rdy4Racing\Modules\ConfigurationManagerException;
+use Rdy4Racing\Modules\ConfigurationException;
 
 /**
  * Configuration Manager
@@ -11,7 +11,7 @@ use Rdy4Racing\Modules\ConfigurationManagerException;
  * 
  * @author alex
  */
-class ConfigurationManager {
+class Configuration {
 	
 	/**
 	 * @var array
@@ -93,7 +93,7 @@ class ConfigurationManager {
 	 * Project autoloader
 	 * 
 	 * @param string $className
-	 * @throws ConfigurationManagerException
+	 * @throws ConfigurationException
 	 */
 	protected function autoload ($className) {
 		$names=explode('\\',$className);
@@ -110,7 +110,7 @@ class ConfigurationManager {
 			}
 		}
 		if (!file_exists($path)) {
-			throw new ConfigurationManagerException('Class '.$className.' not found in '.$path);
+			throw new ConfigurationException('Class '.$className.' not found in '.$path);
 		}
 		require_once $path;
 	}

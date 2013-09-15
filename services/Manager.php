@@ -7,10 +7,10 @@
 
 namespace Rdy4Racing\Services;
 
-use Rdy4Racing\Modules\ConfigurationManager;
+use Rdy4Racing\Modules\Configuration;
 use Rdy4Racing\Services\Server\SoapServer;
 
-class ServiceManager {
+class Manager {
 
 	protected $config;
 	protected $module;
@@ -20,10 +20,10 @@ class ServiceManager {
 	/**
 	 * Construct all params needed for run the webservice
 	 * 
-	 * @param ConfigurationManager $config
+	 * @param Configuration $config
 	 * @param array $data
 	 */
-	public function __construct (ConfigurationManager $config, $module) {
+	public function __construct (Configuration $config, $module) {
 		$this->config = $config;
 		$this->module = strtolower($module);
 	}
@@ -65,7 +65,7 @@ class ServiceManager {
 	/**
 	 * Return ConfigurationManager instance
 	 * 
-	 * @return ConfigurationManager
+	 * @return Configuration
 	 */
 	public function getConfig () {
 		return $this->config;

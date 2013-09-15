@@ -1,9 +1,9 @@
 <?php
 require_once 'PHPUnit/Framework/TestCase.php';
-require_once '../modules/ConfigurationManager.php';
+require_once '../modules/Configuration.php';
 
-use Rdy4Racing\Modules\ConfigurationManager;
-use Rdy4Racing\Modules\User\UserManager;
+use Rdy4Racing\Modules\Configuration;
+use Rdy4Racing\Modules\User\Manager;
 use Rdy4Racing\Models\User;
 use Rdy4Racing\Models\UserQuery;
 use Rdy4Racing\Models\Game;
@@ -39,53 +39,53 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	 * Constructs the test case.
 	 */
 	public function __construct() {
-		$this->config=new ConfigurationManager();
+		$this->config=new Configuration();
 	}
 	
 	public function testUserAdd () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$this->assertNotEmpty($user->getId());
 	}
 	
 	public function testCheckEmailDoesNotExist () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$this->assertFalse($userManager->emailExists($user->getEmail()));
 	}
 	
 	public function testCheckEmailExists () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$this->assertTrue($userManager->emailExists($user->getEmail()));
 	}
 	
 	/**
-	 * @expectedException Rdy4Racing\Modules\User\UserManagerException
+	 * @expectedException Rdy4Racing\Modules\User\UserException
 	 */
 	public function testUserAddUserTwice () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$userManager->addUser($user);
 	}
 	
 	/**
-	 * @expectedException Rdy4Racing\Modules\User\UserManagerException
+	 * @expectedException Rdy4Racing\Modules\User\UserException
 	 */
 	public function testUserWithoutEmail () {
 		$user=$this->getUser();
 		$user->setEmail('');
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 	}
 	
 	public function testUserAddEncryptsPassword () {
 		$user=$this->getUser();
 		$userPasswordBefore=$user->getPassword();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$this->assertNotEquals($userPasswordBefore, $user->getPassword(), 'Checking password is different');
 		$this->assertEquals($user->getPassword(),crypt($userPasswordBefore,$user->getPassword()),'Checking password encryption');
@@ -93,7 +93,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	
 	public function testUserAddConfirmationStringIsCreated () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$this->assertNotEmpty($user->getConfirmationString());
 	}
@@ -102,7 +102,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$user=$this->getUser();
 		$user->setActive(1);
 		$userPasswordBefore=$user->getPassword();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$userLogin=$userManager->login($user->getEmail(),$userPasswordBefore);
 		$this->assertInstanceOf('Rdy4Racing\\Models\\User', $userLogin);
@@ -110,30 +110,30 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * @expectedException Rdy4Racing\Modules\User\UserLoginException
+	 * @expectedException Rdy4Racing\Modules\User\LoginException
 	 */
 	public function testUserLoginWithInvalidEmail () {
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->login('invalid','invalid');
 	}
 	
 	/**
-	 * @expectedException Rdy4Racing\Modules\User\UserLoginException
+	 * @expectedException Rdy4Racing\Modules\User\LoginException
 	 */
 	public function testUserLoginWithInvalidPassword () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$userManager->login($user->getEmail(),'invalid');
 	}
 	
 	/**
-	 * @expectedException Rdy4Racing\Modules\User\UserLoginException
+	 * @expectedException Rdy4Racing\Modules\User\LoginException
 	 */
 	public function testUserLoginWithoutActiveFlag () {
 		$user=$this->getUser();
 		$userPasswordBefore=$user->getPassword();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$userLogin=$userManager->login($user->getEmail(),$userPasswordBefore);
 	}
@@ -141,7 +141,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	
 	public function testUserEmailConfirmationReturnsUserInstance () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$userConfirmed=$userManager->confirmEmail($user->getEmail(), $user->getConfirmationString());
 		$this->assertInstanceOf('Rdy4Racing\\Models\\User', $userConfirmed);
@@ -149,7 +149,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	
 	public function testUserEmailConfirmationActivatesTheUser () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$userConfirmed=$userManager->confirmEmail($user->getEmail(), $user->getConfirmationString());
 		$this->assertEquals(1, $userConfirmed->getActive());
@@ -158,7 +158,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	
 	public function testUserEmailConfirmationWithInvalidString () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$userConfirmed=$userManager->confirmEmail($user->getEmail(),'invalid');
 		$this->assertEquals(0, $userConfirmed->getActive());
@@ -166,7 +166,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	
 	public function testRegisterGame () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$game=$this->getGame();
 		$game->save();
@@ -181,7 +181,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	
 	public function testRegisterGameWithExistingDriver () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$game=$this->getGame();
 		$game->save();
@@ -193,7 +193,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		try {
 			$userManager->registerGame($user2->getId(), $game->getId(),__CLASS__);
 		} catch (\Exception $e) {
-			$this->assertInstanceOf('\\Rdy4Racing\\Modules\\User\\UserManagerException', $e);
+			$this->assertInstanceOf('\\Rdy4Racing\\Modules\\User\\UserException', $e);
 			return ;
 		}
 		$this->fail('An expected exception has not been raised');
@@ -201,7 +201,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	
 	public function testRegisterGameCannotBeDoneTwice () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$game=$this->getGame();
 		$game->save();

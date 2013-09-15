@@ -1,9 +1,9 @@
 <?php
 require_once 'PHPUnit/Framework/TestCase.php';
-require_once '../modules/ConfigurationManager.php';
+require_once '../modules/Configuration.php';
 
-use Rdy4Racing\Modules\ConfigurationManager;
-use Rdy4Racing\Modules\User\UserManager;
+use Rdy4Racing\Modules\Configuration;
+use Rdy4Racing\Modules\User\Manager;
 use Rdy4Racing\Models\User;
 use Rdy4Racing\Models\UserQuery;
 
@@ -20,7 +20,7 @@ class TestServiceObjects extends PHPUnit_Framework_TestCase {
 	 * Prepares the environment before running a test.
 	 */
 	protected function setUp() {
-		$this->config=new ConfigurationManager();
+		$this->config=new Configuration();
 		UserQuery::create()->findByEmail('test@test.com')->delete();
 		parent::setUp ();
 	}
@@ -51,7 +51,7 @@ class TestServiceObjects extends PHPUnit_Framework_TestCase {
 	
 	public function testExportWithId () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$this->data[]=$user;
 		
@@ -65,7 +65,7 @@ class TestServiceObjects extends PHPUnit_Framework_TestCase {
 	
 	public function testExportWithIdAndModifiedData () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$this->data[]=$user;
 	
@@ -80,7 +80,7 @@ class TestServiceObjects extends PHPUnit_Framework_TestCase {
 	
 	public function testExportWithIdAndReadonlyData () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$this->data[]=$user;
 	
@@ -94,7 +94,7 @@ class TestServiceObjects extends PHPUnit_Framework_TestCase {
 	
 	public function testImport () {
 		$user=$this->getUser();
-		$userManager=new UserManager();
+		$userManager=new Manager();
 		$userManager->addUser($user);
 		$this->data[]=$user;
 		

@@ -1,8 +1,8 @@
 <?php
 require_once 'PHPUnit/Framework/TestCase.php';
-require_once '../modules/ConfigurationManager.php';
+require_once '../modules/Configuration.php';
 
-use Rdy4Racing\Modules\ConfigurationManager;
+use Rdy4Racing\Modules\Configuration;
 use Rdy4Racing\Models\GameQuery;
 
 
@@ -26,16 +26,16 @@ class TestConfigurationManager extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testGetConfigurationValue () {
-		$config=new ConfigurationManager();
+		$config=new Configuration();
 		$configValue=$config->get('app.path');
 		$this->assertNotEmpty($configValue);
 	}
 	
 	/**
-	 * @expectedException Rdy4Racing\Modules\ConfigurationManagerException
+	 * @expectedException Rdy4Racing\Modules\ConfigurationException
 	 */
 	public function testAutoloadFailsWithoutExistentClass () {
-		$config=new ConfigurationManager();
+		$config=new Configuration();
 		$c=new Rdy4Racing\Modules\Invalid();
 	}
 	

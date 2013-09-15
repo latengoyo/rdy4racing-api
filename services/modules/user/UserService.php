@@ -1,7 +1,7 @@
 <?php 
 
-use Rdy4Racing\Modules\ConfigurationManager;
-use Rdy4Racing\Modules\User\UserManager;
+use Rdy4Racing\Modules\Configuration;
+use Rdy4Racing\Modules\User\Manager;
 use Rdy4Racing\Services\Objects\User;
 
 class UserService {
@@ -17,9 +17,9 @@ class UserService {
 	protected $manager;
 	
 	
-	public function __construct(ConfigurationManager $config) {
+	public function __construct(Configuration $config) {
 		$this->config=$config;
-		$this->manager=new UserManager();
+		$this->manager=new Manager();
 	}
 	
 	/**

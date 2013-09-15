@@ -8,7 +8,7 @@
  */
 namespace Rdy4Racing\Services\Server;
 
-use Rdy4Racing\Services\ServiceManager;
+use Rdy4Racing\Services\Manager;
 
 class SoapServer implements IServer {
 
@@ -19,7 +19,7 @@ class SoapServer implements IServer {
 	protected $url;
 	protected $serviceManager;
 
-	public function __construct (ServiceManager $serviceManager) {
+	public function __construct (Manager $serviceManager) {
 		$this->serviceManager = $serviceManager;
 		$this->config = $serviceManager->getConfig();
 		$this->module = trim(strtolower($serviceManager->getModule()));

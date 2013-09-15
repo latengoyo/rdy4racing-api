@@ -1,9 +1,9 @@
 <?php
 require_once 'PHPUnit/Framework/TestCase.php';
-require_once '../modules/ConfigurationManager.php';
+require_once '../modules/Configuration.php';
 require_once '../services/modules/game/GameService.php';
 
-use Rdy4Racing\Modules\ConfigurationManager;
+use Rdy4Racing\Modules\Configuration;
 use Rdy4Racing\Models\GameQuery;
 use Rdy4Racing\Models\GameModQuery;
 
@@ -33,7 +33,7 @@ class TestGame extends PHPUnit_Framework_TestCase {
 	 * Constructs the test case.
 	 */
 	public function __construct() {
-		$this->config=new ConfigurationManager();
+		$this->config=new Configuration();
 	}
 
 	public function testGetGames() {

@@ -1,8 +1,8 @@
 <?php
 require_once 'PHPUnit/Framework/TestCase.php';
-require_once '../modules/ConfigurationManager.php';
+require_once '../modules/Configuration.php';
 
-use Rdy4Racing\Modules\ConfigurationManager;
+use Rdy4Racing\Modules\Configuration;
 
 
 /**
@@ -17,7 +17,7 @@ class TestSoap extends PHPUnit_Framework_TestCase {
 	 */
 	protected function setUp() {
 		ini_set("soap.wsdl_cache_enabled", 0);
-		$this->config=new ConfigurationManager();
+		$this->config=new Configuration();
 		parent::setUp ();
 	}
 	

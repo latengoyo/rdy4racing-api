@@ -13,5 +13,5 @@ namespace Rdy4Racing\Services;
  * 
  * @author alex
  */
-class ServiceException extends \Exception{
+class Exception extends \Exception{
 }

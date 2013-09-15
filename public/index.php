@@ -2,11 +2,11 @@
 
 defined('ENVIRONMENT') || define('ENVIRONMENT',(getenv('ENVIRONMENT') ? getenv('ENVIRONMENT') : 'devel'));
 
-require_once '../modules/ConfigurationManager.php';
+require_once '../modules/Configuration.php';
 require_once '../library/Zend/Loader/StandardAutoloader.php';
 
-use Rdy4Racing\Modules\ConfigurationManager;
-use Rdy4Racing\Services\ServiceManager;
+use Rdy4Racing\Modules\Configuration;
+use Rdy4Racing\Services\Manager;
 
 if (ENVIRONMENT!='prod') {
 	error_reporting(E_ALL);
@@ -35,7 +35,7 @@ class Bootstrap {
 	 */
 	public function __construct () {
 		try {
-			$this->config = new ConfigurationManager();
+			$this->config = new Configuration();
 			$this->processUrl();
 			$this->initIncludePath();
 		} catch (\Exception $e) {
@@ -80,7 +80,7 @@ class Bootstrap {
 	 */
 	public function handle () {
 		try {
-			$serviceManager = new ServiceManager($this->config,$this->module);
+			$serviceManager = new Manager($this->config,$this->module);
 			$serviceManager->init();
 			$serviceManager->handle();
 		} catch (\Exception $e) {

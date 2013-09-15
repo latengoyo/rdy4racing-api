@@ -11,7 +11,7 @@ use Rdy4Racing\Models\UserGameQuery;
  * 
  * @author alex
  */
-class GameManager {
+class Manager {
 	
 	/**
 	 * Checks if a user has registered a game

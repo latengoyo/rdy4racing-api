@@ -7,6 +7,6 @@ namespace Rdy4Racing\Modules;
  * 
  * @author alex
  */
-class ConfigurationManagerException extends \Exception {
+class ConfigurationException extends \Exception {
 	
 }

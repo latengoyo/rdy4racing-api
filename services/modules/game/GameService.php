@@ -1,11 +1,11 @@
 <?php 
 
-use Rdy4Racing\Modules\ConfigurationManager;
+use Rdy4Racing\Modules\Configuration;
 use Rdy4Racing\Models\GameQuery;
 use Rdy4Racing\Models\GameModQuery;
 use Rdy4Racing\Services\Objects\GameMod;
 use Rdy4Racing\Services\Objects\Game;
-use Rdy4Racing\Modules\Game\GameManager;
+use Rdy4Racing\Modules\Game\Manager;
 
 class GameService {
 	
@@ -16,11 +16,11 @@ class GameService {
 	
 	/**
 	 * 
-	 * @var GameManager
+	 * @var Manager
 	 */
 	protected $manager;
 	
-	public function __construct(ConfigurationManager $config) {
+	public function __construct(Configuration $config) {
 		$this->config=$config;
 	}
 	

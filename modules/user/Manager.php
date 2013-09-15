@@ -7,7 +7,6 @@ use Rdy4Racing\Models\UserQuery;
 use Rdy4Racing\Helpers\UUIDHelper;
 use Rdy4Racing\Models\UserGame;
 use Rdy4Racing\Models\UserGameQuery;
-use Rdy4Racing\Modules\Game\GameManager;
 
 /**
  * User Manager
@@ -16,7 +15,7 @@ use Rdy4Racing\Modules\Game\GameManager;
  * 
  * @author alex
  */
-class UserManager {
+class Manager {
 	
 	
 	/**
@@ -25,16 +24,16 @@ class UserManager {
 	 * Expects a plain password, it will get encrypted in this function
 	 * 
 	 * @param User $user
-	 * @throws UserManagerException
+	 * @throws UserException
 	 */
 	public function addUser (User $user) {
 		try {
 			// validate data
 			if ($this->emailExists($user->getEmail())) {
-				throw new UserManagerException('An user with the email '.$user->getEmail().' already exists');
+				throw new UserException('An user with the email '.$user->getEmail().' already exists');
 			}
 			if (!$user->validate()) {
-				throw new UserManagerException('User validation failed');
+				throw new UserException('User validation failed');
 			}
 
 			// encrypt password
@@ -71,13 +70,13 @@ class UserManager {
 	public function login ($email,$password) {
 		$user=UserQuery::create()->filterByEmail($email)->findOne();
 		if (!$user) {
-			throw new UserLoginException('User with email '.$email.' does not exist');
+			throw new LoginException('User with email '.$email.' does not exist');
 		}
 		if ($user->getActive()==0) {
-			throw new UserLoginException('User with email '.$email.' is not active');
+			throw new LoginException('User with email '.$email.' is not active');
 		}
 		if (crypt($password,$user->getPassword())!=$user->getPassword()) {
-			throw new UserLoginException('Password is invalid');
+			throw new LoginException('Password is invalid');
 		}
 		return $user;
 	}
@@ -105,9 +104,9 @@ class UserManager {
 	 * @param string $driver
 	 */
 	public function registerGame ($userId,$gameId,$driver) {
-		$gameManager=new GameManager();
+		$gameManager=new \Rdy4Racing\Modules\Game\Manager();
 		if ($gameManager->driverExists($gameId, $driver)) {
-			throw new UserManagerException('Driver '.$driver.' already exists');
+			throw new UserException('Driver '.$driver.' already exists');
 		}
 		
 		if (!$this->userGameExists($userId, $gameId)) {
