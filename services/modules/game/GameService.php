@@ -27,7 +27,7 @@ class GameService {
 	/**
 	 * Return the list of games
 	 * 
-	 * @return array
+	 * @return Rdy4Racing\Services\Objects\Game[]
 	 */
 	public function getGames () {
 		try {
@@ -48,7 +48,7 @@ class GameService {
 	 * Return the list of mods for a game
 	 *
 	 * @param int $gameId
-	 * @return array
+	 * @return Rdy4Racing\Services\Objects\GameMod[]
 	 */
 	public function getGameMods ($gameId) {
 		try {

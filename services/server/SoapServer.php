@@ -9,6 +9,7 @@
 namespace Rdy4Racing\Services\Server;
 
 use Rdy4Racing\Services\Manager;
+use Zend\Soap\Wsdl\ComplexTypeStrategy\ArrayOfTypeComplex;
 
 class SoapServer implements IServer {
 
@@ -32,6 +33,7 @@ class SoapServer implements IServer {
 			$this->server = new \Zend\Soap\AutoDiscover();
 			$this->server->setClass($className)
 			             ->setUri($this->config->get('services.url').'/'.$this->module)
+			             ->setComplexTypeStrategy(new ArrayOfTypeComplex())
 			             //->setBindingStyle(array('style' => 'document'))
 			             //->setOperationBodyStyle(array('use' => 'literal', 'namespace'=>$this->config->get('services.url').'/'.$this->module))
 			             ->setServiceName($this->module);

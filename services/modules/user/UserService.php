@@ -36,6 +36,14 @@ class UserService {
 		}
 	}
 	
+	/**
+	 * Confirms a email key for user validation
+	 * 
+	 * @param string $email
+	 * @param string $confirmationString
+	 * @throws Exception
+	 * @return \Rdy4Racing\Services\Objects\User
+	 */
 	public function confirmEmail ($email, $confirmationString) {
 		try {
 			$userModel=$this->manager->confirmEmail($email, $confirmationString);

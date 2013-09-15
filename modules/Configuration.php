@@ -113,6 +113,8 @@ class Configuration {
 				continue;
 			}
 			if ($i==count($names)-1) {
+				// remove array notation for soap complex types
+				$name=str_replace('[]', '', $name);
 				$path.='/'.$name.'.php';
 			} else {
 				$path.='/'.strtolower($name);
