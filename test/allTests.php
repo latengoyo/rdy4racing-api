@@ -5,6 +5,8 @@ require_once 'TestUserManager.php';
 require_once 'TestSoap.php';
 require_once 'TestServiceObjects.php';
 require_once 'TestGame.php';
+require_once 'TestSessionPractice.php';
+require_once 'TestSessionRace.php';
 
 /**
  * Static test suite.
@@ -21,6 +23,8 @@ class allTests extends PHPUnit_Framework_TestSuite {
 		$this->addTestSuite ( 'TestSoap' );
 		$this->addTestSuite ( 'TestServiceObjects' );
 		$this->addTestSuite ( 'TestGame' );
+		$this->addTestSuite ( 'TestSessionPractice' );
+		$this->addTestSuite ( 'TestSessionRace' );
 	}
 	
 	/**

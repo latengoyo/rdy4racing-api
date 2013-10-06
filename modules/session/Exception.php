@@ -3,6 +3,6 @@
 namespace Rdy4Racing\Modules\Session;
 
 
-class Exception {
+class Exception extends \Exception {
 
 }
