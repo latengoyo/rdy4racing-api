@@ -22,6 +22,7 @@ class GameService {
 	
 	public function __construct(Configuration $config) {
 		$this->config=$config;
+		$this->manager=new Manager();
 	}
 	
 	/**

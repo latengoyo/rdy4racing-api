@@ -3,8 +3,6 @@
 namespace Rdy4Racing\Modules\Session;
 
 use Rdy4Racing\Models\User;
-use Rdy4Racing\Modules\Sesssion\Exception;
-
 
 /**
  * Interface for sessions
@@ -29,6 +27,14 @@ interface ISession {
 	 * @return array
 	 */
 	public function getValidStates ();
+	
+	/**
+	 * Checks if a type is valid for the session
+	 *
+	 * @param int $type
+	 * @return boolean
+	 */
+	public function isValidType ($type);
 	
 	/**
 	 * Checks if a state is valid for the session

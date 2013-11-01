@@ -22,6 +22,14 @@ class Practice extends AbstractSession implements ISession {
 
 	/**
 	 * (non-PHPdoc)
+	 * @see \Rdy4Racing\Modules\Session\ISession::isValidType()
+	 */
+	public function isValidType($type) {
+		return ($type==Type::PRACTICE);
+	}
+	
+	/**
+	 * (non-PHPdoc)
 	 * @see \Rdy4Racing\Modules\Session\ISession::getValidStates()
 	 */
 	public function getValidStates () {

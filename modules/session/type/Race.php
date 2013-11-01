@@ -20,6 +20,15 @@ class Race extends AbstractSession implements ISession {
 	 */
 	protected $state;
 
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see \Rdy4Racing\Modules\Session\ISession::isValidType()
+	 */
+	public function isValidType($type) {
+		return ($type==Type::RACE);
+	}
+	
 	/**
 	 * (non-PHPdoc)
 	 * @see \Rdy4Racing\Modules\Session\ISession::getValidStates()

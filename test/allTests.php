@@ -7,6 +7,7 @@ require_once 'TestServiceObjects.php';
 require_once 'TestGame.php';
 require_once 'TestSessionPractice.php';
 require_once 'TestSessionRace.php';
+require_once 'TestSessionManager.php';
 
 /**
  * Static test suite.
@@ -25,6 +26,7 @@ class allTests extends PHPUnit_Framework_TestSuite {
 		$this->addTestSuite ( 'TestGame' );
 		$this->addTestSuite ( 'TestSessionPractice' );
 		$this->addTestSuite ( 'TestSessionRace' );
+		$this->addTestSuite ( 'TestSessionManager' );
 	}
 	
 	/**

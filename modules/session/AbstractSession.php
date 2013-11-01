@@ -4,31 +4,49 @@ namespace Rdy4Racing\Modules\Session;
 
 use Rdy4Racing\Modules\Session\ISession;
 use Rdy4Racing\Modules\Session\Exception;
+use Rdy4Racing\Models\Session;
 
 abstract class AbstractSession implements ISession {
 	
 	/**
-	 * @var int
+	 * @var Session
 	 */
-	protected $type;
-
-	/**
-	 * @var int
-	 */
-	protected $state;
+	protected $model;
 	
 	/**
 	 * @var array
 	 */
 	protected $requiredMods;
 	
+
+	/**
+	 * Class constructor
+	 * 
+	 * @param Session $model
+	 */
+	public function __construct (Session $model) {
+		if (!$this->isValidType($model->getTypeId())) {
+			throw new Exception('Type is not valid for this session class');
+		}
+		if (!$this->isValidState($model->getStateId())) {
+			throw new Exception('State is not valid for this session class');
+		}
+		$this->model=$model;
+	}
+	
+	/**
+	 * @return the $model
+	 */
+	public function getModel () {
+		return $this->model;
+	}
 	
 	/**
 	 * (non-PHPdoc)
 	 * @see \Rdy4Racing\Modules\Session\ISession::getType()
 	 */
 	public function getType () {
-		return $this->type;
+		return $this->model->getTypeId();
 	}
 	
 	/**
@@ -36,7 +54,7 @@ abstract class AbstractSession implements ISession {
 	 * @see \Rdy4Racing\Modules\Session\ISession::getState()
 	 */
 	public function getState () {
-		return $this->state;
+		return $this->model->getStateId();
 	}
 	
 	/**
@@ -56,9 +74,8 @@ abstract class AbstractSession implements ISession {
 				throw new Exception('Cannot change session state from '.$this->getState().' to '.$state);
 			}
 		}
-		$this->state=$state;
+		$this->model->setStateId($state)->save();
 	}
-	
 	
 	/**
 	 * (non-PHPdoc)
