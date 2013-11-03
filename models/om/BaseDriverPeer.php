@@ -12,7 +12,7 @@ use \PropelPDO;
 use Rdy4Racing\Models\Driver;
 use Rdy4Racing\Models\DriverPeer;
 use Rdy4Racing\Models\SessionPeer;
-use Rdy4Racing\Models\UserPeer;
+use Rdy4Racing\Models\UserGamePeer;
 use Rdy4Racing\Models\map\DriverTableMap;
 
 /**
@@ -49,8 +49,8 @@ abstract class BaseDriverPeer
     /** the column name for the driver_session_id field */
     const DRIVER_SESSION_ID = 'driver.driver_session_id';
 
-    /** the column name for the driver_user_id field */
-    const DRIVER_USER_ID = 'driver.driver_user_id';
+    /** the column name for the driver_usergame_id field */
+    const DRIVER_USERGAME_ID = 'driver.driver_usergame_id';
 
     /** the column name for the driver_rank field */
     const DRIVER_RANK = 'driver.driver_rank';
@@ -86,11 +86,11 @@ abstract class BaseDriverPeer
      * e.g. DriverPeer::$fieldNames[DriverPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('SessionId', 'UserId', 'Rank', 'MMRStart', 'RatingStart', 'MMREnd', 'RatingEnd', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('sessionId', 'userId', 'rank', 'mMRStart', 'ratingStart', 'mMREnd', 'ratingEnd', ),
-        BasePeer::TYPE_COLNAME => array (DriverPeer::DRIVER_SESSION_ID, DriverPeer::DRIVER_USER_ID, DriverPeer::DRIVER_RANK, DriverPeer::DRIVER_MMR_START, DriverPeer::DRIVER_RATING_START, DriverPeer::DRIVER_MMR_END, DriverPeer::DRIVER_RATING_END, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('DRIVER_SESSION_ID', 'DRIVER_USER_ID', 'DRIVER_RANK', 'DRIVER_MMR_START', 'DRIVER_RATING_START', 'DRIVER_MMR_END', 'DRIVER_RATING_END', ),
-        BasePeer::TYPE_FIELDNAME => array ('driver_session_id', 'driver_user_id', 'driver_rank', 'driver_mmr_start', 'driver_rating_start', 'driver_mmr_end', 'driver_rating_end', ),
+        BasePeer::TYPE_PHPNAME => array ('SessionId', 'UserGameId', 'Rank', 'MMRStart', 'RatingStart', 'MMREnd', 'RatingEnd', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('sessionId', 'userGameId', 'rank', 'mMRStart', 'ratingStart', 'mMREnd', 'ratingEnd', ),
+        BasePeer::TYPE_COLNAME => array (DriverPeer::DRIVER_SESSION_ID, DriverPeer::DRIVER_USERGAME_ID, DriverPeer::DRIVER_RANK, DriverPeer::DRIVER_MMR_START, DriverPeer::DRIVER_RATING_START, DriverPeer::DRIVER_MMR_END, DriverPeer::DRIVER_RATING_END, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('DRIVER_SESSION_ID', 'DRIVER_USERGAME_ID', 'DRIVER_RANK', 'DRIVER_MMR_START', 'DRIVER_RATING_START', 'DRIVER_MMR_END', 'DRIVER_RATING_END', ),
+        BasePeer::TYPE_FIELDNAME => array ('driver_session_id', 'driver_usergame_id', 'driver_rank', 'driver_mmr_start', 'driver_rating_start', 'driver_mmr_end', 'driver_rating_end', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
     );
 
@@ -101,11 +101,11 @@ abstract class BaseDriverPeer
      * e.g. DriverPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('SessionId' => 0, 'UserId' => 1, 'Rank' => 2, 'MMRStart' => 3, 'RatingStart' => 4, 'MMREnd' => 5, 'RatingEnd' => 6, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('sessionId' => 0, 'userId' => 1, 'rank' => 2, 'mMRStart' => 3, 'ratingStart' => 4, 'mMREnd' => 5, 'ratingEnd' => 6, ),
-        BasePeer::TYPE_COLNAME => array (DriverPeer::DRIVER_SESSION_ID => 0, DriverPeer::DRIVER_USER_ID => 1, DriverPeer::DRIVER_RANK => 2, DriverPeer::DRIVER_MMR_START => 3, DriverPeer::DRIVER_RATING_START => 4, DriverPeer::DRIVER_MMR_END => 5, DriverPeer::DRIVER_RATING_END => 6, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('DRIVER_SESSION_ID' => 0, 'DRIVER_USER_ID' => 1, 'DRIVER_RANK' => 2, 'DRIVER_MMR_START' => 3, 'DRIVER_RATING_START' => 4, 'DRIVER_MMR_END' => 5, 'DRIVER_RATING_END' => 6, ),
-        BasePeer::TYPE_FIELDNAME => array ('driver_session_id' => 0, 'driver_user_id' => 1, 'driver_rank' => 2, 'driver_mmr_start' => 3, 'driver_rating_start' => 4, 'driver_mmr_end' => 5, 'driver_rating_end' => 6, ),
+        BasePeer::TYPE_PHPNAME => array ('SessionId' => 0, 'UserGameId' => 1, 'Rank' => 2, 'MMRStart' => 3, 'RatingStart' => 4, 'MMREnd' => 5, 'RatingEnd' => 6, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('sessionId' => 0, 'userGameId' => 1, 'rank' => 2, 'mMRStart' => 3, 'ratingStart' => 4, 'mMREnd' => 5, 'ratingEnd' => 6, ),
+        BasePeer::TYPE_COLNAME => array (DriverPeer::DRIVER_SESSION_ID => 0, DriverPeer::DRIVER_USERGAME_ID => 1, DriverPeer::DRIVER_RANK => 2, DriverPeer::DRIVER_MMR_START => 3, DriverPeer::DRIVER_RATING_START => 4, DriverPeer::DRIVER_MMR_END => 5, DriverPeer::DRIVER_RATING_END => 6, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('DRIVER_SESSION_ID' => 0, 'DRIVER_USERGAME_ID' => 1, 'DRIVER_RANK' => 2, 'DRIVER_MMR_START' => 3, 'DRIVER_RATING_START' => 4, 'DRIVER_MMR_END' => 5, 'DRIVER_RATING_END' => 6, ),
+        BasePeer::TYPE_FIELDNAME => array ('driver_session_id' => 0, 'driver_usergame_id' => 1, 'driver_rank' => 2, 'driver_mmr_start' => 3, 'driver_rating_start' => 4, 'driver_mmr_end' => 5, 'driver_rating_end' => 6, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
     );
 
@@ -181,7 +181,7 @@ abstract class BaseDriverPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(DriverPeer::DRIVER_SESSION_ID);
-            $criteria->addSelectColumn(DriverPeer::DRIVER_USER_ID);
+            $criteria->addSelectColumn(DriverPeer::DRIVER_USERGAME_ID);
             $criteria->addSelectColumn(DriverPeer::DRIVER_RANK);
             $criteria->addSelectColumn(DriverPeer::DRIVER_MMR_START);
             $criteria->addSelectColumn(DriverPeer::DRIVER_RATING_START);
@@ -189,7 +189,7 @@ abstract class BaseDriverPeer
             $criteria->addSelectColumn(DriverPeer::DRIVER_RATING_END);
         } else {
             $criteria->addSelectColumn($alias . '.driver_session_id');
-            $criteria->addSelectColumn($alias . '.driver_user_id');
+            $criteria->addSelectColumn($alias . '.driver_usergame_id');
             $criteria->addSelectColumn($alias . '.driver_rank');
             $criteria->addSelectColumn($alias . '.driver_mmr_start');
             $criteria->addSelectColumn($alias . '.driver_rating_start');
@@ -321,7 +321,7 @@ abstract class BaseDriverPeer
     {
         if (Propel::isInstancePoolingEnabled()) {
             if ($key === null) {
-                $key = serialize(array((string) $obj->getSessionId(), (string) $obj->getUserId()));
+                $key = serialize(array((string) $obj->getSessionId(), (string) $obj->getUserGameId()));
             } // if key === null
             DriverPeer::$instances[$key] = $obj;
         }
@@ -344,7 +344,7 @@ abstract class BaseDriverPeer
     {
         if (Propel::isInstancePoolingEnabled() && $value !== null) {
             if (is_object($value) && $value instanceof Driver) {
-                $key = serialize(array((string) $value->getSessionId(), (string) $value->getUserId()));
+                $key = serialize(array((string) $value->getSessionId(), (string) $value->getUserGameId()));
             } elseif (is_array($value) && count($value) === 2) {
                 // assume we've been passed a primary key
                 $key = serialize(array((string) $value[0], (string) $value[1]));
@@ -548,7 +548,7 @@ abstract class BaseDriverPeer
 
 
     /**
-     * Returns the number of rows matching criteria, joining the related User table
+     * Returns the number of rows matching criteria, joining the related UserGame table
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -556,7 +556,7 @@ abstract class BaseDriverPeer
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
      * @return int Number of matching rows.
      */
-    public static function doCountJoinUser(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doCountJoinUserGame(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         // we're going to modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -583,7 +583,7 @@ abstract class BaseDriverPeer
             $con = Propel::getConnection(DriverPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(DriverPeer::DRIVER_USER_ID, UserPeer::USER_ID, $join_behavior);
+        $criteria->addJoin(DriverPeer::DRIVER_USERGAME_ID, UserGamePeer::USGM_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -666,7 +666,7 @@ abstract class BaseDriverPeer
 
 
     /**
-     * Selects a collection of Driver objects pre-filled with their User objects.
+     * Selects a collection of Driver objects pre-filled with their UserGame objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
@@ -674,7 +674,7 @@ abstract class BaseDriverPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelectJoinUser(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doSelectJoinUserGame(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $criteria = clone $criteria;
 
@@ -685,9 +685,9 @@ abstract class BaseDriverPeer
 
         DriverPeer::addSelectColumns($criteria);
         $startcol = DriverPeer::NUM_HYDRATE_COLUMNS;
-        UserPeer::addSelectColumns($criteria);
+        UserGamePeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(DriverPeer::DRIVER_USER_ID, UserPeer::USER_ID, $join_behavior);
+        $criteria->addJoin(DriverPeer::DRIVER_USERGAME_ID, UserGamePeer::USGM_ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -707,19 +707,19 @@ abstract class BaseDriverPeer
                 DriverPeer::addInstanceToPool($obj1, $key1);
             } // if $obj1 already loaded
 
-            $key2 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            $key2 = UserGamePeer::getPrimaryKeyHashFromRow($row, $startcol);
             if ($key2 !== null) {
-                $obj2 = UserPeer::getInstanceFromPool($key2);
+                $obj2 = UserGamePeer::getInstanceFromPool($key2);
                 if (!$obj2) {
 
-                    $cls = UserPeer::getOMClass();
+                    $cls = UserGamePeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol);
-                    UserPeer::addInstanceToPool($obj2, $key2);
+                    UserGamePeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 already loaded
 
-                // Add the $obj1 (Driver) to $obj2 (User)
+                // Add the $obj1 (Driver) to $obj2 (UserGame)
                 $obj2->addDriver($obj1);
 
             } // if joined row was not null
@@ -770,7 +770,7 @@ abstract class BaseDriverPeer
 
         $criteria->addJoin(DriverPeer::DRIVER_SESSION_ID, SessionPeer::SESSION_ID, $join_behavior);
 
-        $criteria->addJoin(DriverPeer::DRIVER_USER_ID, UserPeer::USER_ID, $join_behavior);
+        $criteria->addJoin(DriverPeer::DRIVER_USERGAME_ID, UserGamePeer::USGM_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -809,12 +809,12 @@ abstract class BaseDriverPeer
         SessionPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + SessionPeer::NUM_HYDRATE_COLUMNS;
 
-        UserPeer::addSelectColumns($criteria);
-        $startcol4 = $startcol3 + UserPeer::NUM_HYDRATE_COLUMNS;
+        UserGamePeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + UserGamePeer::NUM_HYDRATE_COLUMNS;
 
         $criteria->addJoin(DriverPeer::DRIVER_SESSION_ID, SessionPeer::SESSION_ID, $join_behavior);
 
-        $criteria->addJoin(DriverPeer::DRIVER_USER_ID, UserPeer::USER_ID, $join_behavior);
+        $criteria->addJoin(DriverPeer::DRIVER_USERGAME_ID, UserGamePeer::USGM_ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -851,21 +851,21 @@ abstract class BaseDriverPeer
                 $obj2->addDriver($obj1);
             } // if joined row not null
 
-            // Add objects for joined User rows
+            // Add objects for joined UserGame rows
 
-            $key3 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+            $key3 = UserGamePeer::getPrimaryKeyHashFromRow($row, $startcol3);
             if ($key3 !== null) {
-                $obj3 = UserPeer::getInstanceFromPool($key3);
+                $obj3 = UserGamePeer::getInstanceFromPool($key3);
                 if (!$obj3) {
 
-                    $cls = UserPeer::getOMClass();
+                    $cls = UserGamePeer::getOMClass();
 
                     $obj3 = new $cls();
                     $obj3->hydrate($row, $startcol3);
-                    UserPeer::addInstanceToPool($obj3, $key3);
+                    UserGamePeer::addInstanceToPool($obj3, $key3);
                 } // if obj3 loaded
 
-                // Add the $obj1 (Driver) to the collection in $obj3 (User)
+                // Add the $obj1 (Driver) to the collection in $obj3 (UserGame)
                 $obj3->addDriver($obj1);
             } // if joined row not null
 
@@ -913,7 +913,7 @@ abstract class BaseDriverPeer
             $con = Propel::getConnection(DriverPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(DriverPeer::DRIVER_USER_ID, UserPeer::USER_ID, $join_behavior);
+        $criteria->addJoin(DriverPeer::DRIVER_USERGAME_ID, UserGamePeer::USGM_ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -929,7 +929,7 @@ abstract class BaseDriverPeer
 
 
     /**
-     * Returns the number of rows matching criteria, joining the related User table
+     * Returns the number of rows matching criteria, joining the related UserGame table
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -937,7 +937,7 @@ abstract class BaseDriverPeer
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
      * @return int Number of matching rows.
      */
-    public static function doCountJoinAllExceptUser(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doCountJoinAllExceptUserGame(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         // we're going to modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -1003,10 +1003,10 @@ abstract class BaseDriverPeer
         DriverPeer::addSelectColumns($criteria);
         $startcol2 = DriverPeer::NUM_HYDRATE_COLUMNS;
 
-        UserPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + UserPeer::NUM_HYDRATE_COLUMNS;
+        UserGamePeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + UserGamePeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(DriverPeer::DRIVER_USER_ID, UserPeer::USER_ID, $join_behavior);
+        $criteria->addJoin(DriverPeer::DRIVER_USERGAME_ID, UserGamePeer::USGM_ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1026,21 +1026,21 @@ abstract class BaseDriverPeer
                 DriverPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
-                // Add objects for joined User rows
+                // Add objects for joined UserGame rows
 
-                $key2 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                $key2 = UserGamePeer::getPrimaryKeyHashFromRow($row, $startcol2);
                 if ($key2 !== null) {
-                    $obj2 = UserPeer::getInstanceFromPool($key2);
+                    $obj2 = UserGamePeer::getInstanceFromPool($key2);
                     if (!$obj2) {
 
-                        $cls = UserPeer::getOMClass();
+                        $cls = UserGamePeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol2);
-                    UserPeer::addInstanceToPool($obj2, $key2);
+                    UserGamePeer::addInstanceToPool($obj2, $key2);
                 } // if $obj2 already loaded
 
-                // Add the $obj1 (Driver) to the collection in $obj2 (User)
+                // Add the $obj1 (Driver) to the collection in $obj2 (UserGame)
                 $obj2->addDriver($obj1);
 
             } // if joined row is not null
@@ -1054,7 +1054,7 @@ abstract class BaseDriverPeer
 
 
     /**
-     * Selects a collection of Driver objects pre-filled with all related objects except User.
+     * Selects a collection of Driver objects pre-filled with all related objects except UserGame.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
@@ -1063,7 +1063,7 @@ abstract class BaseDriverPeer
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelectJoinAllExceptUser(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doSelectJoinAllExceptUserGame(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $criteria = clone $criteria;
 
@@ -1227,10 +1227,10 @@ abstract class BaseDriverPeer
                 $selectCriteria->setPrimaryTableName(DriverPeer::TABLE_NAME);
             }
 
-            $comparison = $criteria->getComparison(DriverPeer::DRIVER_USER_ID);
-            $value = $criteria->remove(DriverPeer::DRIVER_USER_ID);
+            $comparison = $criteria->getComparison(DriverPeer::DRIVER_USERGAME_ID);
+            $value = $criteria->remove(DriverPeer::DRIVER_USERGAME_ID);
             if ($value) {
-                $selectCriteria->add(DriverPeer::DRIVER_USER_ID, $value, $comparison);
+                $selectCriteria->add(DriverPeer::DRIVER_USERGAME_ID, $value, $comparison);
             } else {
                 $selectCriteria->setPrimaryTableName(DriverPeer::TABLE_NAME);
             }
@@ -1317,7 +1317,7 @@ abstract class BaseDriverPeer
             }
             foreach ($values as $value) {
                 $criterion = $criteria->getNewCriterion(DriverPeer::DRIVER_SESSION_ID, $value[0]);
-                $criterion->addAnd($criteria->getNewCriterion(DriverPeer::DRIVER_USER_ID, $value[1]));
+                $criterion->addAnd($criteria->getNewCriterion(DriverPeer::DRIVER_USERGAME_ID, $value[1]));
                 $criteria->addOr($criterion);
                 // we can invalidate the cache for this single PK
                 DriverPeer::removeInstanceFromPool($value);
@@ -1385,12 +1385,12 @@ abstract class BaseDriverPeer
     /**
      * Retrieve object using using composite pkey values.
      * @param   int $driver_session_id
-     * @param   int $driver_user_id
+     * @param   int $driver_usergame_id
      * @param      PropelPDO $con
      * @return Driver
      */
-    public static function retrieveByPK($driver_session_id, $driver_user_id, PropelPDO $con = null) {
-        $_instancePoolKey = serialize(array((string) $driver_session_id, (string) $driver_user_id));
+    public static function retrieveByPK($driver_session_id, $driver_usergame_id, PropelPDO $con = null) {
+        $_instancePoolKey = serialize(array((string) $driver_session_id, (string) $driver_usergame_id));
          if (null !== ($obj = DriverPeer::getInstanceFromPool($_instancePoolKey))) {
              return $obj;
         }
@@ -1400,7 +1400,7 @@ abstract class BaseDriverPeer
         }
         $criteria = new Criteria(DriverPeer::DATABASE_NAME);
         $criteria->add(DriverPeer::DRIVER_SESSION_ID, $driver_session_id);
-        $criteria->add(DriverPeer::DRIVER_USER_ID, $driver_user_id);
+        $criteria->add(DriverPeer::DRIVER_USERGAME_ID, $driver_usergame_id);
         $v = DriverPeer::doSelect($criteria, $con);
 
         return !empty($v) ? $v[0] : null;

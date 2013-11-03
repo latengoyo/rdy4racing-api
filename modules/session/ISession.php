@@ -2,6 +2,7 @@
 
 namespace Rdy4Racing\Modules\Session;
 
+use Rdy4Racing\Models\Driver;
 use Rdy4Racing\Models\User;
 
 /**
@@ -57,7 +58,7 @@ interface ISession {
 	 * Joins a user to a new session
 	 * 
 	 * @param User $user
-	 * @return boolean
+	 * @return Driver
 	 * @throws Exception
 	 */
 	public function join (User $user);

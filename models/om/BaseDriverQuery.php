@@ -16,7 +16,7 @@ use Rdy4Racing\Models\Driver;
 use Rdy4Racing\Models\DriverPeer;
 use Rdy4Racing\Models\DriverQuery;
 use Rdy4Racing\Models\Session;
-use Rdy4Racing\Models\User;
+use Rdy4Racing\Models\UserGame;
 
 /**
  * Base class that represents a query for the 'driver' table.
@@ -24,7 +24,7 @@ use Rdy4Racing\Models\User;
  *
  *
  * @method DriverQuery orderBySessionId($order = Criteria::ASC) Order by the driver_session_id column
- * @method DriverQuery orderByUserId($order = Criteria::ASC) Order by the driver_user_id column
+ * @method DriverQuery orderByUserGameId($order = Criteria::ASC) Order by the driver_usergame_id column
  * @method DriverQuery orderByRank($order = Criteria::ASC) Order by the driver_rank column
  * @method DriverQuery orderByMMRStart($order = Criteria::ASC) Order by the driver_mmr_start column
  * @method DriverQuery orderByRatingStart($order = Criteria::ASC) Order by the driver_rating_start column
@@ -32,7 +32,7 @@ use Rdy4Racing\Models\User;
  * @method DriverQuery orderByRatingEnd($order = Criteria::ASC) Order by the driver_rating_end column
  *
  * @method DriverQuery groupBySessionId() Group by the driver_session_id column
- * @method DriverQuery groupByUserId() Group by the driver_user_id column
+ * @method DriverQuery groupByUserGameId() Group by the driver_usergame_id column
  * @method DriverQuery groupByRank() Group by the driver_rank column
  * @method DriverQuery groupByMMRStart() Group by the driver_mmr_start column
  * @method DriverQuery groupByRatingStart() Group by the driver_rating_start column
@@ -47,15 +47,15 @@ use Rdy4Racing\Models\User;
  * @method DriverQuery rightJoinSession($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Session relation
  * @method DriverQuery innerJoinSession($relationAlias = null) Adds a INNER JOIN clause to the query using the Session relation
  *
- * @method DriverQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
- * @method DriverQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
- * @method DriverQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
+ * @method DriverQuery leftJoinUserGame($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserGame relation
+ * @method DriverQuery rightJoinUserGame($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserGame relation
+ * @method DriverQuery innerJoinUserGame($relationAlias = null) Adds a INNER JOIN clause to the query using the UserGame relation
  *
  * @method Driver findOne(PropelPDO $con = null) Return the first Driver matching the query
  * @method Driver findOneOrCreate(PropelPDO $con = null) Return the first Driver matching the query, or a new Driver object populated from the query conditions when no match is found
  *
  * @method Driver findOneBySessionId(int $driver_session_id) Return the first Driver filtered by the driver_session_id column
- * @method Driver findOneByUserId(int $driver_user_id) Return the first Driver filtered by the driver_user_id column
+ * @method Driver findOneByUserGameId(int $driver_usergame_id) Return the first Driver filtered by the driver_usergame_id column
  * @method Driver findOneByRank(string $driver_rank) Return the first Driver filtered by the driver_rank column
  * @method Driver findOneByMMRStart(int $driver_mmr_start) Return the first Driver filtered by the driver_mmr_start column
  * @method Driver findOneByRatingStart(int $driver_rating_start) Return the first Driver filtered by the driver_rating_start column
@@ -63,7 +63,7 @@ use Rdy4Racing\Models\User;
  * @method Driver findOneByRatingEnd(int $driver_rating_end) Return the first Driver filtered by the driver_rating_end column
  *
  * @method array findBySessionId(int $driver_session_id) Return Driver objects filtered by the driver_session_id column
- * @method array findByUserId(int $driver_user_id) Return Driver objects filtered by the driver_user_id column
+ * @method array findByUserGameId(int $driver_usergame_id) Return Driver objects filtered by the driver_usergame_id column
  * @method array findByRank(string $driver_rank) Return Driver objects filtered by the driver_rank column
  * @method array findByMMRStart(int $driver_mmr_start) Return Driver objects filtered by the driver_mmr_start column
  * @method array findByRatingStart(int $driver_rating_start) Return Driver objects filtered by the driver_rating_start column
@@ -124,7 +124,7 @@ abstract class BaseDriverQuery extends ModelCriteria
      * </code>
      *
      * @param array $key Primary key to use for the query
-                         A Primary key composition: [$driver_session_id, $driver_user_id]
+                         A Primary key composition: [$driver_session_id, $driver_usergame_id]
      * @param     PropelPDO $con an optional connection object
      *
      * @return   Driver|Driver[]|mixed the result, formatted by the current formatter
@@ -163,7 +163,7 @@ abstract class BaseDriverQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `driver_session_id`, `driver_user_id`, `driver_rank`, `driver_mmr_start`, `driver_rating_start`, `driver_mmr_end`, `driver_rating_end` FROM `driver` WHERE `driver_session_id` = :p0 AND `driver_user_id` = :p1';
+        $sql = 'SELECT `driver_session_id`, `driver_usergame_id`, `driver_rank`, `driver_mmr_start`, `driver_rating_start`, `driver_mmr_end`, `driver_rating_end` FROM `driver` WHERE `driver_session_id` = :p0 AND `driver_usergame_id` = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -237,7 +237,7 @@ abstract class BaseDriverQuery extends ModelCriteria
     public function filterByPrimaryKey($key)
     {
         $this->addUsingAlias(DriverPeer::DRIVER_SESSION_ID, $key[0], Criteria::EQUAL);
-        $this->addUsingAlias(DriverPeer::DRIVER_USER_ID, $key[1], Criteria::EQUAL);
+        $this->addUsingAlias(DriverPeer::DRIVER_USERGAME_ID, $key[1], Criteria::EQUAL);
 
         return $this;
     }
@@ -256,7 +256,7 @@ abstract class BaseDriverQuery extends ModelCriteria
         }
         foreach ($keys as $key) {
             $cton0 = $this->getNewCriterion(DriverPeer::DRIVER_SESSION_ID, $key[0], Criteria::EQUAL);
-            $cton1 = $this->getNewCriterion(DriverPeer::DRIVER_USER_ID, $key[1], Criteria::EQUAL);
+            $cton1 = $this->getNewCriterion(DriverPeer::DRIVER_USERGAME_ID, $key[1], Criteria::EQUAL);
             $cton0->addAnd($cton1);
             $this->addOr($cton0);
         }
@@ -309,19 +309,19 @@ abstract class BaseDriverQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the driver_user_id column
+     * Filter the query on the driver_usergame_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByUserId(1234); // WHERE driver_user_id = 1234
-     * $query->filterByUserId(array(12, 34)); // WHERE driver_user_id IN (12, 34)
-     * $query->filterByUserId(array('min' => 12)); // WHERE driver_user_id >= 12
-     * $query->filterByUserId(array('max' => 12)); // WHERE driver_user_id <= 12
+     * $query->filterByUserGameId(1234); // WHERE driver_usergame_id = 1234
+     * $query->filterByUserGameId(array(12, 34)); // WHERE driver_usergame_id IN (12, 34)
+     * $query->filterByUserGameId(array('min' => 12)); // WHERE driver_usergame_id >= 12
+     * $query->filterByUserGameId(array('max' => 12)); // WHERE driver_usergame_id <= 12
      * </code>
      *
-     * @see       filterByUser()
+     * @see       filterByUserGame()
      *
-     * @param     mixed $userId The value to use as filter.
+     * @param     mixed $userGameId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -329,16 +329,16 @@ abstract class BaseDriverQuery extends ModelCriteria
      *
      * @return DriverQuery The current query, for fluid interface
      */
-    public function filterByUserId($userId = null, $comparison = null)
+    public function filterByUserGameId($userGameId = null, $comparison = null)
     {
-        if (is_array($userId)) {
+        if (is_array($userGameId)) {
             $useMinMax = false;
-            if (isset($userId['min'])) {
-                $this->addUsingAlias(DriverPeer::DRIVER_USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
+            if (isset($userGameId['min'])) {
+                $this->addUsingAlias(DriverPeer::DRIVER_USERGAME_ID, $userGameId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($userId['max'])) {
-                $this->addUsingAlias(DriverPeer::DRIVER_USER_ID, $userId['max'], Criteria::LESS_EQUAL);
+            if (isset($userGameId['max'])) {
+                $this->addUsingAlias(DriverPeer::DRIVER_USERGAME_ID, $userGameId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -349,7 +349,7 @@ abstract class BaseDriverQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DriverPeer::DRIVER_USER_ID, $userId, $comparison);
+        return $this->addUsingAlias(DriverPeer::DRIVER_USERGAME_ID, $userGameId, $comparison);
     }
 
     /**
@@ -626,43 +626,43 @@ abstract class BaseDriverQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related User object
+     * Filter the query by a related UserGame object
      *
-     * @param   User|PropelObjectCollection $user The related object(s) to use as filter
+     * @param   UserGame|PropelObjectCollection $userGame The related object(s) to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 DriverQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByUser($user, $comparison = null)
+    public function filterByUserGame($userGame, $comparison = null)
     {
-        if ($user instanceof User) {
+        if ($userGame instanceof UserGame) {
             return $this
-                ->addUsingAlias(DriverPeer::DRIVER_USER_ID, $user->getId(), $comparison);
-        } elseif ($user instanceof PropelObjectCollection) {
+                ->addUsingAlias(DriverPeer::DRIVER_USERGAME_ID, $userGame->getId(), $comparison);
+        } elseif ($userGame instanceof PropelObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(DriverPeer::DRIVER_USER_ID, $user->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(DriverPeer::DRIVER_USERGAME_ID, $userGame->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByUser() only accepts arguments of type User or PropelCollection');
+            throw new PropelException('filterByUserGame() only accepts arguments of type UserGame or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the User relation
+     * Adds a JOIN clause to the query using the UserGame relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return DriverQuery The current query, for fluid interface
      */
-    public function joinUser($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinUserGame($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('User');
+        $relationMap = $tableMap->getRelation('UserGame');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -677,14 +677,14 @@ abstract class BaseDriverQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'User');
+            $this->addJoinObject($join, 'UserGame');
         }
 
         return $this;
     }
 
     /**
-     * Use the User relation User object
+     * Use the UserGame relation UserGame object
      *
      * @see       useQuery()
      *
@@ -692,13 +692,13 @@ abstract class BaseDriverQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \Rdy4Racing\Models\UserQuery A secondary query class using the current class as primary query
+     * @return   \Rdy4Racing\Models\UserGameQuery A secondary query class using the current class as primary query
      */
-    public function useUserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useUserGameQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'User', '\Rdy4Racing\Models\UserQuery');
+            ->joinUserGame($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'UserGame', '\Rdy4Racing\Models\UserGameQuery');
     }
 
     /**
@@ -712,7 +712,7 @@ abstract class BaseDriverQuery extends ModelCriteria
     {
         if ($driver) {
             $this->addCond('pruneCond0', $this->getAliasedColName(DriverPeer::DRIVER_SESSION_ID), $driver->getSessionId(), Criteria::NOT_EQUAL);
-            $this->addCond('pruneCond1', $this->getAliasedColName(DriverPeer::DRIVER_USER_ID), $driver->getUserId(), Criteria::NOT_EQUAL);
+            $this->addCond('pruneCond1', $this->getAliasedColName(DriverPeer::DRIVER_USERGAME_ID), $driver->getUserGameId(), Criteria::NOT_EQUAL);
             $this->combine(array('pruneCond0', 'pruneCond1'), Criteria::LOGICAL_OR);
         }
 

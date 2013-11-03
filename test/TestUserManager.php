@@ -23,8 +23,8 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	 * Prepares the environment before running a test.
 	 */
 	protected function setUp() {
-		$this->removeData();
 		parent::setUp ();
+		$this->removeData();
 	}
 	
 	/**
@@ -176,7 +176,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, $userGames->count());
 		
 		$userGame=$userGames->findOne();
-		$this->assertEquals(__CLASS__, $userGame->getDriver());
+		$this->assertEquals(__CLASS__, $userGame->getDriverName());
 	}
 	
 	public function testRegisterGameWithExistingDriver () {
@@ -232,7 +232,7 @@ class TestUserManager extends PHPUnit_Framework_TestCase {
 	
 	protected function removeData () {
 		$users=UserQuery::create()->findByEmail('%@test.com');
-		$games=GameQuery::create()->findByName(__CLASS__.'%');
+		$games=GameQuery::create()->findByCode('TEST');
 		$userGameQuery=UserGameQuery::create()->filterByUser($users)->filterByGame($games)->delete();
 		$games->delete();
 		$users->delete();

@@ -12,6 +12,7 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use Rdy4Racing\Models\Driver;
 use Rdy4Racing\Models\Game;
 use Rdy4Racing\Models\User;
 use Rdy4Racing\Models\UserGame;
@@ -26,12 +27,12 @@ use Rdy4Racing\Models\UserGameQuery;
  * @method UserGameQuery orderById($order = Criteria::ASC) Order by the usgm_id column
  * @method UserGameQuery orderByUserId($order = Criteria::ASC) Order by the usgm_user_id column
  * @method UserGameQuery orderByGameId($order = Criteria::ASC) Order by the usgm_game_id column
- * @method UserGameQuery orderByDriver($order = Criteria::ASC) Order by the usgm_driver column
+ * @method UserGameQuery orderByDriverName($order = Criteria::ASC) Order by the usgm_drivername column
  *
  * @method UserGameQuery groupById() Group by the usgm_id column
  * @method UserGameQuery groupByUserId() Group by the usgm_user_id column
  * @method UserGameQuery groupByGameId() Group by the usgm_game_id column
- * @method UserGameQuery groupByDriver() Group by the usgm_driver column
+ * @method UserGameQuery groupByDriverName() Group by the usgm_drivername column
  *
  * @method UserGameQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method UserGameQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -45,17 +46,21 @@ use Rdy4Racing\Models\UserGameQuery;
  * @method UserGameQuery rightJoinGame($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Game relation
  * @method UserGameQuery innerJoinGame($relationAlias = null) Adds a INNER JOIN clause to the query using the Game relation
  *
+ * @method UserGameQuery leftJoinDriver($relationAlias = null) Adds a LEFT JOIN clause to the query using the Driver relation
+ * @method UserGameQuery rightJoinDriver($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Driver relation
+ * @method UserGameQuery innerJoinDriver($relationAlias = null) Adds a INNER JOIN clause to the query using the Driver relation
+ *
  * @method UserGame findOne(PropelPDO $con = null) Return the first UserGame matching the query
  * @method UserGame findOneOrCreate(PropelPDO $con = null) Return the first UserGame matching the query, or a new UserGame object populated from the query conditions when no match is found
  *
  * @method UserGame findOneByUserId(int $usgm_user_id) Return the first UserGame filtered by the usgm_user_id column
  * @method UserGame findOneByGameId(int $usgm_game_id) Return the first UserGame filtered by the usgm_game_id column
- * @method UserGame findOneByDriver(string $usgm_driver) Return the first UserGame filtered by the usgm_driver column
+ * @method UserGame findOneByDriverName(string $usgm_drivername) Return the first UserGame filtered by the usgm_drivername column
  *
  * @method array findById(int $usgm_id) Return UserGame objects filtered by the usgm_id column
  * @method array findByUserId(int $usgm_user_id) Return UserGame objects filtered by the usgm_user_id column
  * @method array findByGameId(int $usgm_game_id) Return UserGame objects filtered by the usgm_game_id column
- * @method array findByDriver(string $usgm_driver) Return UserGame objects filtered by the usgm_driver column
+ * @method array findByDriverName(string $usgm_drivername) Return UserGame objects filtered by the usgm_drivername column
  *
  * @package    propel.generator..om
  */
@@ -163,7 +168,7 @@ abstract class BaseUserGameQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `usgm_id`, `usgm_user_id`, `usgm_game_id`, `usgm_driver` FROM `user_game` WHERE `usgm_id` = :p0';
+        $sql = 'SELECT `usgm_id`, `usgm_user_id`, `usgm_game_id`, `usgm_drivername` FROM `user_game` WHERE `usgm_id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -383,32 +388,32 @@ abstract class BaseUserGameQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the usgm_driver column
+     * Filter the query on the usgm_drivername column
      *
      * Example usage:
      * <code>
-     * $query->filterByDriver('fooValue');   // WHERE usgm_driver = 'fooValue'
-     * $query->filterByDriver('%fooValue%'); // WHERE usgm_driver LIKE '%fooValue%'
+     * $query->filterByDriverName('fooValue');   // WHERE usgm_drivername = 'fooValue'
+     * $query->filterByDriverName('%fooValue%'); // WHERE usgm_drivername LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $driver The value to use as filter.
+     * @param     string $driverName The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return UserGameQuery The current query, for fluid interface
      */
-    public function filterByDriver($driver = null, $comparison = null)
+    public function filterByDriverName($driverName = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($driver)) {
+            if (is_array($driverName)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $driver)) {
-                $driver = str_replace('*', '%', $driver);
+            } elseif (preg_match('/[\%\*]/', $driverName)) {
+                $driverName = str_replace('*', '%', $driverName);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(UserGamePeer::USGM_DRIVER, $driver, $comparison);
+        return $this->addUsingAlias(UserGamePeer::USGM_DRIVERNAME, $driverName, $comparison);
     }
 
     /**
@@ -561,6 +566,80 @@ abstract class BaseUserGameQuery extends ModelCriteria
         return $this
             ->joinGame($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Game', '\Rdy4Racing\Models\GameQuery');
+    }
+
+    /**
+     * Filter the query by a related Driver object
+     *
+     * @param   Driver|PropelObjectCollection $driver  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserGameQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByDriver($driver, $comparison = null)
+    {
+        if ($driver instanceof Driver) {
+            return $this
+                ->addUsingAlias(UserGamePeer::USGM_ID, $driver->getUserGameId(), $comparison);
+        } elseif ($driver instanceof PropelObjectCollection) {
+            return $this
+                ->useDriverQuery()
+                ->filterByPrimaryKeys($driver->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByDriver() only accepts arguments of type Driver or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Driver relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserGameQuery The current query, for fluid interface
+     */
+    public function joinDriver($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Driver');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Driver');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Driver relation Driver object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Rdy4Racing\Models\DriverQuery A secondary query class using the current class as primary query
+     */
+    public function useDriverQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinDriver($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Driver', '\Rdy4Racing\Models\DriverQuery');
     }
 
     /**

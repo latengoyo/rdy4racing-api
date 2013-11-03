@@ -5,6 +5,8 @@ namespace Rdy4Racing\Modules\Session;
 use Rdy4Racing\Modules\Session\ISession;
 use Rdy4Racing\Modules\Session\Exception;
 use Rdy4Racing\Models\Session;
+use Rdy4Racing\Models\Driver;
+use Rdy4Racing\Models\UserGameQuery;
 
 abstract class AbstractSession implements ISession {
 	
@@ -35,7 +37,7 @@ abstract class AbstractSession implements ISession {
 	}
 	
 	/**
-	 * @return the $model
+	 * @return \Rdy4Racing\Models\Session
 	 */
 	public function getModel () {
 		return $this->model;
@@ -86,6 +88,33 @@ abstract class AbstractSession implements ISession {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Adds a user to the session
+	 * 
+	 * Users must be added first by using the join() method
+	 * 
+	 * @param \Rdy4Racing\Models\User $user
+	 * @return \Rdy4Racing\Models\Driver
+	 */
+	protected function addUser (\Rdy4Racing\Models\User $user) {
+		// get user driver
+		$userGame=UserGameQuery::create()
+			->filterByUserId($user->getId())
+			->filterByGameId($this->getModel()->getGameId())
+			->findOne();
+		if (!$userGame) {
+			throw new Exception('User has not registered the game');
+		}
+		$driver=new Driver();
+		$driver->setSessionId($this->model->getId())
+			->setUserGameId($userGame->getId())
+			->setRank($user->getRank())
+			->setRatingStart($user->getRating())
+			->setMMRStart($user->getMMR())
+			->save();
+		return $driver;
 	}
 	
 	/**

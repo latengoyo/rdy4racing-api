@@ -68,7 +68,6 @@ class UserTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('UserRelatedByGodfatherId', 'Rdy4Racing\\Models\\User', RelationMap::MANY_TO_ONE, array('user_godfather' => 'user_id', ), null, null);
-        $this->addRelation('Driver', 'Rdy4Racing\\Models\\Driver', RelationMap::ONE_TO_MANY, array('user_id' => 'driver_user_id', ), null, null, 'Drivers');
         $this->addRelation('UserRelatedById', 'Rdy4Racing\\Models\\User', RelationMap::ONE_TO_MANY, array('user_id' => 'user_godfather', ), null, null, 'UsersRelatedById');
         $this->addRelation('UserGame', 'Rdy4Racing\\Models\\UserGame', RelationMap::ONE_TO_MANY, array('user_id' => 'usgm_user_id', ), null, null, 'UserGames');
     } // buildRelations()

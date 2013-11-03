@@ -12,21 +12,21 @@ DROP TABLE IF EXISTS `driver`;
 CREATE TABLE `driver`
 (
     `driver_session_id` INTEGER NOT NULL,
-    `driver_user_id` INTEGER NOT NULL,
+    `driver_usergame_id` INTEGER NOT NULL,
     `driver_rank` VARCHAR(1) NOT NULL,
     `driver_mmr_start` INTEGER NOT NULL,
     `driver_rating_start` INTEGER NOT NULL,
     `driver_mmr_end` INTEGER,
     `driver_rating_end` INTEGER,
-    PRIMARY KEY (`driver_session_id`,`driver_user_id`),
+    PRIMARY KEY (`driver_session_id`,`driver_usergame_id`),
     INDEX `driver_I_1` (`driver_session_id`),
-    INDEX `driver_I_2` (`driver_user_id`),
+    INDEX `driver_I_2` (`driver_usergame_id`),
     CONSTRAINT `driver_FK_1`
         FOREIGN KEY (`driver_session_id`)
         REFERENCES `session` (`session_id`),
     CONSTRAINT `driver_FK_2`
-        FOREIGN KEY (`driver_user_id`)
-        REFERENCES `user` (`user_id`)
+        FOREIGN KEY (`driver_usergame_id`)
+        REFERENCES `user_game` (`usgm_id`)
 ) ENGINE=InnoDB CHARACTER SET='utf8';
 
 -- ---------------------------------------------------------------------
@@ -175,11 +175,11 @@ CREATE TABLE `user_game`
     `usgm_id` INTEGER NOT NULL AUTO_INCREMENT,
     `usgm_user_id` INTEGER NOT NULL,
     `usgm_game_id` INTEGER NOT NULL,
-    `usgm_driver` VARCHAR(32) NOT NULL,
+    `usgm_drivername` VARCHAR(32) NOT NULL,
     PRIMARY KEY (`usgm_id`),
     UNIQUE INDEX `user_game_U_1` (`usgm_user_id`, `usgm_game_id`),
-    UNIQUE INDEX `user_game_U_2` (`usgm_game_id`, `usgm_driver`),
-    INDEX `user_game_I_1` (`usgm_driver`),
+    UNIQUE INDEX `user_game_U_2` (`usgm_game_id`, `usgm_drivername`),
+    INDEX `user_game_I_1` (`usgm_drivername`),
     CONSTRAINT `user_game_FK_1`
         FOREIGN KEY (`usgm_user_id`)
         REFERENCES `user` (`user_id`),

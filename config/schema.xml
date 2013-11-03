@@ -2,7 +2,7 @@
 <database name="rdy4racing" namespace="Rdy4Racing\Models" defaultIdMethod="native">
 	<table name="driver" phpName="Driver">
 		<column name="driver_session_id" phpName="SessionId" type="integer" required="true" primaryKey="true" />
-		<column name="driver_user_id" phpName="UserId" type="integer" required="true" primaryKey="true" />
+		<column name="driver_usergame_id" phpName="UserGameId" type="integer" required="true" primaryKey="true" />
 		<column name="driver_rank" phpName="Rank" type="varchar" size="1" required="true" />
 		<column name="driver_mmr_start" phpName="MMRStart" type="integer" required="true" />
 		<column name="driver_rating_start" phpName="RatingStart" type="integer" required="true" />
@@ -12,13 +12,13 @@
 			<index-column name="driver_session_id" />
 		</index>
 		<index>
-			<index-column name="driver_user_id" />
+			<index-column name="driver_usergame_id" />
 		</index>
 		<foreign-key foreignTable="session">
 			<reference local="driver_session_id" foreign="session_id" phpName="Session"/>
 		</foreign-key>
-		<foreign-key foreignTable="user">
-			<reference local="driver_user_id" foreign="user_id" phpName="User"/>
+		<foreign-key foreignTable="user_game">
+			<reference local="driver_usergame_id" foreign="usgm_id" phpName="UserGame"/>
 		</foreign-key>
 		<vendor type="mysql">
 			<parameter name="Engine" value="InnoDB"/>
@@ -153,9 +153,9 @@
 		<column name="usgm_id" phpName="Id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
 		<column name="usgm_user_id" phpName="UserId" type="integer" required="true" />
 		<column name="usgm_game_id" phpName="GameId" type="integer" required="true" />
-		<column name="usgm_driver" phpName="Driver" type="varchar" size="32" required="true" />
+		<column name="usgm_drivername" phpName="DriverName" type="varchar" size="32" required="true" />
 		<index>
-			<index-column name="usgm_driver" />
+			<index-column name="usgm_drivername" />
 		</index>
 		<unique>
 			<unique-column name="usgm_user_id"/>
@@ -163,7 +163,7 @@
 		</unique>
 		<unique>
 			<unique-column name="usgm_game_id"/>
-			<unique-column name="usgm_driver"/>
+			<unique-column name="usgm_drivername"/>
 		</unique>
 		<foreign-key foreignTable="user">
 			<reference local="usgm_user_id" foreign="user_id" phpName="User"/>

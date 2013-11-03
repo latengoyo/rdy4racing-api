@@ -45,7 +45,7 @@ class UserGameTableMap extends TableMap
         $this->addPrimaryKey('usgm_id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('usgm_user_id', 'UserId', 'INTEGER', 'user', 'user_id', true, null, null);
         $this->addForeignKey('usgm_game_id', 'GameId', 'INTEGER', 'game', 'game_id', true, null, null);
-        $this->addColumn('usgm_driver', 'Driver', 'VARCHAR', true, 32, null);
+        $this->addColumn('usgm_drivername', 'DriverName', 'VARCHAR', true, 32, null);
         // validators
     } // initialize()
 
@@ -56,6 +56,7 @@ class UserGameTableMap extends TableMap
     {
         $this->addRelation('User', 'Rdy4Racing\\Models\\User', RelationMap::MANY_TO_ONE, array('usgm_user_id' => 'user_id', ), null, null);
         $this->addRelation('Game', 'Rdy4Racing\\Models\\Game', RelationMap::MANY_TO_ONE, array('usgm_game_id' => 'game_id', ), null, null);
+        $this->addRelation('Driver', 'Rdy4Racing\\Models\\Driver', RelationMap::ONE_TO_MANY, array('usgm_id' => 'driver_usergame_id', ), null, null, 'Drivers');
     } // buildRelations()
 
 } // UserGameTableMap

@@ -43,7 +43,7 @@ class DriverTableMap extends TableMap
         $this->setUseIdGenerator(false);
         // columns
         $this->addForeignPrimaryKey('driver_session_id', 'SessionId', 'INTEGER' , 'session', 'session_id', true, null, null);
-        $this->addForeignPrimaryKey('driver_user_id', 'UserId', 'INTEGER' , 'user', 'user_id', true, null, null);
+        $this->addForeignPrimaryKey('driver_usergame_id', 'UserGameId', 'INTEGER' , 'user_game', 'usgm_id', true, null, null);
         $this->addColumn('driver_rank', 'Rank', 'VARCHAR', true, 1, null);
         $this->addColumn('driver_mmr_start', 'MMRStart', 'INTEGER', true, null, null);
         $this->addColumn('driver_rating_start', 'RatingStart', 'INTEGER', true, null, null);
@@ -58,7 +58,7 @@ class DriverTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Session', 'Rdy4Racing\\Models\\Session', RelationMap::MANY_TO_ONE, array('driver_session_id' => 'session_id', ), null, null);
-        $this->addRelation('User', 'Rdy4Racing\\Models\\User', RelationMap::MANY_TO_ONE, array('driver_user_id' => 'user_id', ), null, null);
+        $this->addRelation('UserGame', 'Rdy4Racing\\Models\\UserGame', RelationMap::MANY_TO_ONE, array('driver_usergame_id' => 'usgm_id', ), null, null);
     } // buildRelations()
 
 } // DriverTableMap

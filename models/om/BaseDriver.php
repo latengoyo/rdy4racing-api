@@ -16,8 +16,8 @@ use Rdy4Racing\Models\DriverPeer;
 use Rdy4Racing\Models\DriverQuery;
 use Rdy4Racing\Models\Session;
 use Rdy4Racing\Models\SessionQuery;
-use Rdy4Racing\Models\User;
-use Rdy4Racing\Models\UserQuery;
+use Rdy4Racing\Models\UserGame;
+use Rdy4Racing\Models\UserGameQuery;
 
 /**
  * Base class that represents a row from the 'driver' table.
@@ -54,10 +54,10 @@ abstract class BaseDriver extends BaseObject implements Persistent
     protected $driver_session_id;
 
     /**
-     * The value for the driver_user_id field.
+     * The value for the driver_usergame_id field.
      * @var        int
      */
-    protected $driver_user_id;
+    protected $driver_usergame_id;
 
     /**
      * The value for the driver_rank field.
@@ -95,9 +95,9 @@ abstract class BaseDriver extends BaseObject implements Persistent
     protected $aSession;
 
     /**
-     * @var        User
+     * @var        UserGame
      */
-    protected $aUser;
+    protected $aUserGame;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -131,14 +131,14 @@ abstract class BaseDriver extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [driver_user_id] column value.
+     * Get the [driver_usergame_id] column value.
      *
      * @return int
      */
-    public function getUserId()
+    public function getUserGameId()
     {
 
-        return $this->driver_user_id;
+        return $this->driver_usergame_id;
     }
 
     /**
@@ -222,29 +222,29 @@ abstract class BaseDriver extends BaseObject implements Persistent
     } // setSessionId()
 
     /**
-     * Set the value of [driver_user_id] column.
+     * Set the value of [driver_usergame_id] column.
      *
      * @param  int $v new value
      * @return Driver The current object (for fluent API support)
      */
-    public function setUserId($v)
+    public function setUserGameId($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
-        if ($this->driver_user_id !== $v) {
-            $this->driver_user_id = $v;
-            $this->modifiedColumns[] = DriverPeer::DRIVER_USER_ID;
+        if ($this->driver_usergame_id !== $v) {
+            $this->driver_usergame_id = $v;
+            $this->modifiedColumns[] = DriverPeer::DRIVER_USERGAME_ID;
         }
 
-        if ($this->aUser !== null && $this->aUser->getId() !== $v) {
-            $this->aUser = null;
+        if ($this->aUserGame !== null && $this->aUserGame->getId() !== $v) {
+            $this->aUserGame = null;
         }
 
 
         return $this;
-    } // setUserId()
+    } // setUserGameId()
 
     /**
      * Set the value of [driver_rank] column.
@@ -384,7 +384,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
         try {
 
             $this->driver_session_id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->driver_user_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->driver_usergame_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
             $this->driver_rank = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->driver_mmr_start = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->driver_rating_start = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
@@ -425,8 +425,8 @@ abstract class BaseDriver extends BaseObject implements Persistent
         if ($this->aSession !== null && $this->driver_session_id !== $this->aSession->getId()) {
             $this->aSession = null;
         }
-        if ($this->aUser !== null && $this->driver_user_id !== $this->aUser->getId()) {
-            $this->aUser = null;
+        if ($this->aUserGame !== null && $this->driver_usergame_id !== $this->aUserGame->getId()) {
+            $this->aUserGame = null;
         }
     } // ensureConsistency
 
@@ -468,7 +468,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aSession = null;
-            $this->aUser = null;
+            $this->aUserGame = null;
         } // if (deep)
     }
 
@@ -594,11 +594,11 @@ abstract class BaseDriver extends BaseObject implements Persistent
                 $this->setSession($this->aSession);
             }
 
-            if ($this->aUser !== null) {
-                if ($this->aUser->isModified() || $this->aUser->isNew()) {
-                    $affectedRows += $this->aUser->save($con);
+            if ($this->aUserGame !== null) {
+                if ($this->aUserGame->isModified() || $this->aUserGame->isNew()) {
+                    $affectedRows += $this->aUserGame->save($con);
                 }
-                $this->setUser($this->aUser);
+                $this->setUserGame($this->aUserGame);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -637,8 +637,8 @@ abstract class BaseDriver extends BaseObject implements Persistent
         if ($this->isColumnModified(DriverPeer::DRIVER_SESSION_ID)) {
             $modifiedColumns[':p' . $index++]  = '`driver_session_id`';
         }
-        if ($this->isColumnModified(DriverPeer::DRIVER_USER_ID)) {
-            $modifiedColumns[':p' . $index++]  = '`driver_user_id`';
+        if ($this->isColumnModified(DriverPeer::DRIVER_USERGAME_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`driver_usergame_id`';
         }
         if ($this->isColumnModified(DriverPeer::DRIVER_RANK)) {
             $modifiedColumns[':p' . $index++]  = '`driver_rank`';
@@ -669,8 +669,8 @@ abstract class BaseDriver extends BaseObject implements Persistent
                     case '`driver_session_id`':
                         $stmt->bindValue($identifier, $this->driver_session_id, PDO::PARAM_INT);
                         break;
-                    case '`driver_user_id`':
-                        $stmt->bindValue($identifier, $this->driver_user_id, PDO::PARAM_INT);
+                    case '`driver_usergame_id`':
+                        $stmt->bindValue($identifier, $this->driver_usergame_id, PDO::PARAM_INT);
                         break;
                     case '`driver_rank`':
                         $stmt->bindValue($identifier, $this->driver_rank, PDO::PARAM_STR);
@@ -785,9 +785,9 @@ abstract class BaseDriver extends BaseObject implements Persistent
                 }
             }
 
-            if ($this->aUser !== null) {
-                if (!$this->aUser->validate($columns)) {
-                    $failureMap = array_merge($failureMap, $this->aUser->getValidationFailures());
+            if ($this->aUserGame !== null) {
+                if (!$this->aUserGame->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aUserGame->getValidationFailures());
                 }
             }
 
@@ -836,7 +836,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
                 return $this->getSessionId();
                 break;
             case 1:
-                return $this->getUserId();
+                return $this->getUserGameId();
                 break;
             case 2:
                 return $this->getRank();
@@ -883,7 +883,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
         $keys = DriverPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getSessionId(),
-            $keys[1] => $this->getUserId(),
+            $keys[1] => $this->getUserGameId(),
             $keys[2] => $this->getRank(),
             $keys[3] => $this->getMMRStart(),
             $keys[4] => $this->getRatingStart(),
@@ -900,8 +900,8 @@ abstract class BaseDriver extends BaseObject implements Persistent
             if (null !== $this->aSession) {
                 $result['Session'] = $this->aSession->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aUser) {
-                $result['User'] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->aUserGame) {
+                $result['UserGame'] = $this->aUserGame->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -941,7 +941,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
                 $this->setSessionId($value);
                 break;
             case 1:
-                $this->setUserId($value);
+                $this->setUserGameId($value);
                 break;
             case 2:
                 $this->setRank($value);
@@ -983,7 +983,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
         $keys = DriverPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setSessionId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setUserId($arr[$keys[1]]);
+        if (array_key_exists($keys[1], $arr)) $this->setUserGameId($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setRank($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setMMRStart($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setRatingStart($arr[$keys[4]]);
@@ -1001,7 +1001,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
         $criteria = new Criteria(DriverPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(DriverPeer::DRIVER_SESSION_ID)) $criteria->add(DriverPeer::DRIVER_SESSION_ID, $this->driver_session_id);
-        if ($this->isColumnModified(DriverPeer::DRIVER_USER_ID)) $criteria->add(DriverPeer::DRIVER_USER_ID, $this->driver_user_id);
+        if ($this->isColumnModified(DriverPeer::DRIVER_USERGAME_ID)) $criteria->add(DriverPeer::DRIVER_USERGAME_ID, $this->driver_usergame_id);
         if ($this->isColumnModified(DriverPeer::DRIVER_RANK)) $criteria->add(DriverPeer::DRIVER_RANK, $this->driver_rank);
         if ($this->isColumnModified(DriverPeer::DRIVER_MMR_START)) $criteria->add(DriverPeer::DRIVER_MMR_START, $this->driver_mmr_start);
         if ($this->isColumnModified(DriverPeer::DRIVER_RATING_START)) $criteria->add(DriverPeer::DRIVER_RATING_START, $this->driver_rating_start);
@@ -1023,7 +1023,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
     {
         $criteria = new Criteria(DriverPeer::DATABASE_NAME);
         $criteria->add(DriverPeer::DRIVER_SESSION_ID, $this->driver_session_id);
-        $criteria->add(DriverPeer::DRIVER_USER_ID, $this->driver_user_id);
+        $criteria->add(DriverPeer::DRIVER_USERGAME_ID, $this->driver_usergame_id);
 
         return $criteria;
     }
@@ -1037,7 +1037,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
     {
         $pks = array();
         $pks[0] = $this->getSessionId();
-        $pks[1] = $this->getUserId();
+        $pks[1] = $this->getUserGameId();
 
         return $pks;
     }
@@ -1051,7 +1051,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
     public function setPrimaryKey($keys)
     {
         $this->setSessionId($keys[0]);
-        $this->setUserId($keys[1]);
+        $this->setUserGameId($keys[1]);
     }
 
     /**
@@ -1061,7 +1061,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
     public function isPrimaryKeyNull()
     {
 
-        return (null === $this->getSessionId()) && (null === $this->getUserId());
+        return (null === $this->getSessionId()) && (null === $this->getUserGameId());
     }
 
     /**
@@ -1078,7 +1078,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setSessionId($this->getSessionId());
-        $copyObj->setUserId($this->getUserId());
+        $copyObj->setUserGameId($this->getUserGameId());
         $copyObj->setRank($this->getRank());
         $copyObj->setMMRStart($this->getMMRStart());
         $copyObj->setRatingStart($this->getRatingStart());
@@ -1194,24 +1194,24 @@ abstract class BaseDriver extends BaseObject implements Persistent
     }
 
     /**
-     * Declares an association between this object and a User object.
+     * Declares an association between this object and a UserGame object.
      *
-     * @param                  User $v
+     * @param                  UserGame $v
      * @return Driver The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setUser(User $v = null)
+    public function setUserGame(UserGame $v = null)
     {
         if ($v === null) {
-            $this->setUserId(NULL);
+            $this->setUserGameId(NULL);
         } else {
-            $this->setUserId($v->getId());
+            $this->setUserGameId($v->getId());
         }
 
-        $this->aUser = $v;
+        $this->aUserGame = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the User object, it will not be re-added.
+        // If this object has already been added to the UserGame object, it will not be re-added.
         if ($v !== null) {
             $v->addDriver($this);
         }
@@ -1222,27 +1222,27 @@ abstract class BaseDriver extends BaseObject implements Persistent
 
 
     /**
-     * Get the associated User object
+     * Get the associated UserGame object
      *
      * @param PropelPDO $con Optional Connection object.
      * @param $doQuery Executes a query to get the object if required
-     * @return User The associated User object.
+     * @return UserGame The associated UserGame object.
      * @throws PropelException
      */
-    public function getUser(PropelPDO $con = null, $doQuery = true)
+    public function getUserGame(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aUser === null && ($this->driver_user_id !== null) && $doQuery) {
-            $this->aUser = UserQuery::create()->findPk($this->driver_user_id, $con);
+        if ($this->aUserGame === null && ($this->driver_usergame_id !== null) && $doQuery) {
+            $this->aUserGame = UserGameQuery::create()->findPk($this->driver_usergame_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aUser->addDrivers($this);
+                $this->aUserGame->addDrivers($this);
              */
         }
 
-        return $this->aUser;
+        return $this->aUserGame;
     }
 
     /**
@@ -1251,7 +1251,7 @@ abstract class BaseDriver extends BaseObject implements Persistent
     public function clear()
     {
         $this->driver_session_id = null;
-        $this->driver_user_id = null;
+        $this->driver_usergame_id = null;
         $this->driver_rank = null;
         $this->driver_mmr_start = null;
         $this->driver_rating_start = null;
@@ -1282,15 +1282,15 @@ abstract class BaseDriver extends BaseObject implements Persistent
             if ($this->aSession instanceof Persistent) {
               $this->aSession->clearAllReferences($deep);
             }
-            if ($this->aUser instanceof Persistent) {
-              $this->aUser->clearAllReferences($deep);
+            if ($this->aUserGame instanceof Persistent) {
+              $this->aUserGame->clearAllReferences($deep);
             }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
         $this->aSession = null;
-        $this->aUser = null;
+        $this->aUserGame = null;
     }
 
     /**

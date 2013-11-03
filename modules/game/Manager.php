@@ -21,7 +21,7 @@ class Manager {
 	 * @return boolean
 	 */
 	public function driverExists ($gameId,$driver) {
-		return UserGameQuery::create()->filterByGameId($gameId)->filterByDriver($driver)->count();
+		return UserGameQuery::create()->filterByGameId($gameId)->filterByDriverName($driver)->count();
 	}
 	
 }

@@ -1530,10 +1530,10 @@ abstract class BaseSession extends BaseObject implements Persistent
      * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return PropelObjectCollection|Driver[] List of Driver objects
      */
-    public function getDriversJoinUser($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public function getDriversJoinUserGame($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $query = DriverQuery::create(null, $criteria);
-        $query->joinWith('User', $join_behavior);
+        $query->joinWith('UserGame', $join_behavior);
 
         return $this->getDrivers($query, $con);
     }

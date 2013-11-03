@@ -111,10 +111,10 @@ class Manager {
 		
 		if (!$this->userGameExists($userId, $gameId)) {
 			$userGame=new UserGame();
-			$userGame->setUserId($userId);
-			$userGame->setGameId($gameId);
-			$userGame->setDriver($driver);
-			$userGame->save();
+			$userGame->setUserId($userId)
+				->setGameId($gameId)
+				->setDriverName($driver)
+				->save();
 		}
 	}
 	

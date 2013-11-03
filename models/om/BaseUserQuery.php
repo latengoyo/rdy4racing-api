@@ -12,7 +12,6 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use Rdy4Racing\Models\Driver;
 use Rdy4Racing\Models\User;
 use Rdy4Racing\Models\UserGame;
 use Rdy4Racing\Models\UserPeer;
@@ -62,10 +61,6 @@ use Rdy4Racing\Models\UserQuery;
  * @method UserQuery leftJoinUserRelatedByGodfatherId($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByGodfatherId relation
  * @method UserQuery rightJoinUserRelatedByGodfatherId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByGodfatherId relation
  * @method UserQuery innerJoinUserRelatedByGodfatherId($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByGodfatherId relation
- *
- * @method UserQuery leftJoinDriver($relationAlias = null) Adds a LEFT JOIN clause to the query using the Driver relation
- * @method UserQuery rightJoinDriver($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Driver relation
- * @method UserQuery innerJoinDriver($relationAlias = null) Adds a INNER JOIN clause to the query using the Driver relation
  *
  * @method UserQuery leftJoinUserRelatedById($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedById relation
  * @method UserQuery rightJoinUserRelatedById($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedById relation
@@ -908,80 +903,6 @@ abstract class BaseUserQuery extends ModelCriteria
         return $this
             ->joinUserRelatedByGodfatherId($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'UserRelatedByGodfatherId', '\Rdy4Racing\Models\UserQuery');
-    }
-
-    /**
-     * Filter the query by a related Driver object
-     *
-     * @param   Driver|PropelObjectCollection $driver  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 UserQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByDriver($driver, $comparison = null)
-    {
-        if ($driver instanceof Driver) {
-            return $this
-                ->addUsingAlias(UserPeer::USER_ID, $driver->getUserId(), $comparison);
-        } elseif ($driver instanceof PropelObjectCollection) {
-            return $this
-                ->useDriverQuery()
-                ->filterByPrimaryKeys($driver->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByDriver() only accepts arguments of type Driver or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Driver relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return UserQuery The current query, for fluid interface
-     */
-    public function joinDriver($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Driver');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Driver');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Driver relation Driver object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \Rdy4Racing\Models\DriverQuery A secondary query class using the current class as primary query
-     */
-    public function useDriverQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinDriver($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Driver', '\Rdy4Racing\Models\DriverQuery');
     }
 
     /**

@@ -55,8 +55,8 @@ abstract class BaseUserGamePeer
     /** the column name for the usgm_game_id field */
     const USGM_GAME_ID = 'user_game.usgm_game_id';
 
-    /** the column name for the usgm_driver field */
-    const USGM_DRIVER = 'user_game.usgm_driver';
+    /** the column name for the usgm_drivername field */
+    const USGM_DRIVERNAME = 'user_game.usgm_drivername';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -77,11 +77,11 @@ abstract class BaseUserGamePeer
      * e.g. UserGamePeer::$fieldNames[UserGamePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'UserId', 'GameId', 'Driver', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'userId', 'gameId', 'driver', ),
-        BasePeer::TYPE_COLNAME => array (UserGamePeer::USGM_ID, UserGamePeer::USGM_USER_ID, UserGamePeer::USGM_GAME_ID, UserGamePeer::USGM_DRIVER, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('USGM_ID', 'USGM_USER_ID', 'USGM_GAME_ID', 'USGM_DRIVER', ),
-        BasePeer::TYPE_FIELDNAME => array ('usgm_id', 'usgm_user_id', 'usgm_game_id', 'usgm_driver', ),
+        BasePeer::TYPE_PHPNAME => array ('Id', 'UserId', 'GameId', 'DriverName', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'userId', 'gameId', 'driverName', ),
+        BasePeer::TYPE_COLNAME => array (UserGamePeer::USGM_ID, UserGamePeer::USGM_USER_ID, UserGamePeer::USGM_GAME_ID, UserGamePeer::USGM_DRIVERNAME, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('USGM_ID', 'USGM_USER_ID', 'USGM_GAME_ID', 'USGM_DRIVERNAME', ),
+        BasePeer::TYPE_FIELDNAME => array ('usgm_id', 'usgm_user_id', 'usgm_game_id', 'usgm_drivername', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
@@ -92,11 +92,11 @@ abstract class BaseUserGamePeer
      * e.g. UserGamePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'UserId' => 1, 'GameId' => 2, 'Driver' => 3, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'userId' => 1, 'gameId' => 2, 'driver' => 3, ),
-        BasePeer::TYPE_COLNAME => array (UserGamePeer::USGM_ID => 0, UserGamePeer::USGM_USER_ID => 1, UserGamePeer::USGM_GAME_ID => 2, UserGamePeer::USGM_DRIVER => 3, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('USGM_ID' => 0, 'USGM_USER_ID' => 1, 'USGM_GAME_ID' => 2, 'USGM_DRIVER' => 3, ),
-        BasePeer::TYPE_FIELDNAME => array ('usgm_id' => 0, 'usgm_user_id' => 1, 'usgm_game_id' => 2, 'usgm_driver' => 3, ),
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'UserId' => 1, 'GameId' => 2, 'DriverName' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'userId' => 1, 'gameId' => 2, 'driverName' => 3, ),
+        BasePeer::TYPE_COLNAME => array (UserGamePeer::USGM_ID => 0, UserGamePeer::USGM_USER_ID => 1, UserGamePeer::USGM_GAME_ID => 2, UserGamePeer::USGM_DRIVERNAME => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('USGM_ID' => 0, 'USGM_USER_ID' => 1, 'USGM_GAME_ID' => 2, 'USGM_DRIVERNAME' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('usgm_id' => 0, 'usgm_user_id' => 1, 'usgm_game_id' => 2, 'usgm_drivername' => 3, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
@@ -174,12 +174,12 @@ abstract class BaseUserGamePeer
             $criteria->addSelectColumn(UserGamePeer::USGM_ID);
             $criteria->addSelectColumn(UserGamePeer::USGM_USER_ID);
             $criteria->addSelectColumn(UserGamePeer::USGM_GAME_ID);
-            $criteria->addSelectColumn(UserGamePeer::USGM_DRIVER);
+            $criteria->addSelectColumn(UserGamePeer::USGM_DRIVERNAME);
         } else {
             $criteria->addSelectColumn($alias . '.usgm_id');
             $criteria->addSelectColumn($alias . '.usgm_user_id');
             $criteria->addSelectColumn($alias . '.usgm_game_id');
-            $criteria->addSelectColumn($alias . '.usgm_driver');
+            $criteria->addSelectColumn($alias . '.usgm_drivername');
         }
     }
 
